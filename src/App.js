@@ -1,24 +1,41 @@
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './Assets/Styles/bodyStyles.css'
+import DonutChart from './Assets/Components/donutChart.js'
+import MacroKeys from './Assets/Components/MacroKeys.js'
+import NutritionKeys from './Assets/Components/NutritionKeys';
+import TabMenu from './Assets/Components/TabMenu.js';
+import PieChart from './Assets/Components/PieChart.js';
+
+import './Assets/Styles/pieChartStyles.css'
 
 function App() {
+
+const [selectedIndex, setSelectedIndex] = React.useState(0)
+  function SelectTab(index)
+  {
+    setSelectedIndex(index)
+  }
+
+  const showMacros = true;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <div className='displayCard'>
+      <TabMenu OnClickEvent= {(index) =>{SelectTab(index)}}/>
     </div>
+    {selectedIndex === 0 && <div className='displayCard'>
+      <PieChart />
+      </div>}
+    { selectedIndex === 2 &&<div className='displayCard'>
+      <DonutChart />
+      <MacroKeys />
+    </div>}
+    { selectedIndex === 1 && <div className='displayCard'>
+      <NutritionKeys />  
+    </div>}
+    </>
   );
 }
 
