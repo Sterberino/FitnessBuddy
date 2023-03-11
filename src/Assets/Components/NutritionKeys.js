@@ -127,19 +127,15 @@ export default function NutritionKeys()
             {
                 if(currentValues[i] === fillPercentages[i])
                 {
-                    console.log(`currentFill[${i}] === fillPercentages[${i}]`)
                     continue;
                 }
                 else{
-                    console.log(`currentFill[${i}] != fillPercentages[${i}]`)
                     let val = currentValues[i] + 0.02;
                     if(val > fillPercentages[i])
                     {
                         val = fillPercentages[i]
                     }
-                    console.log('here')
                     currentValues[i] = val;
-                    console.log('here')
                     changed = true;
                 }
             }
@@ -159,19 +155,15 @@ export default function NutritionKeys()
         }
     }, [currentFill, body])
 
-    React.useEffect(()=> {
-        console.log(currentFill);
-    }, currentFill)
-
     function GenerateNutritionList()
     {
         const keys = [];
         const nutritionInfo = GetNutritionInfo();
         
         //Headers
-        keys.push(<div className="title total-title">{"Total"}</div>)
-        keys.push(<div className="title goal-title">{"Goal"}</div>)
-        keys.push(<div className="title left-title">{"Left"}</div>)
+        keys.push(<div className="title total-title" key = {"total-title"}>{"Total"}</div>)
+        keys.push(<div className="title goal-title" key = {"goal-title"}>{"Goal"}</div>)
+        keys.push(<div className="title left-title" key = {"eft-title"}>{"Left"}</div>)
 
         let i = 0;
         for(i; i < nutritionInfo.length; i++)
@@ -208,12 +200,12 @@ export default function NutritionKeys()
                     "width" : `${currentFill[i] > 0.998 ? 99.8 : currentFill[i] * 100}%`
                 }
             }
-            keys.push(<div className="nutrient-keys-divider"></div>)
-            keys.push(<div className="title nutrient-title">{nutritionInfo[i].Name}</div>)
-            keys.push(<div className="nutrient-amount">{nutritionInfo[i].currentAmount}</div>)
-            keys.push(<div className="nutrient-amount">{nutritionInfo[i].desiredAmount}</div>)
-            keys.push(<div className="nutrient-amount">{nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount}</div>)
-            keys.push(<div className="nutrient-bar">
+            keys.push(<div className="nutrient-keys-divider" key = {`nutrient-keys-divider ${i}`}></div>)
+            keys.push(<div className="title nutrient-title" key = {`nutrient-title ${i}`}>{nutritionInfo[i].Name}</div>)
+            keys.push(<div className="nutrient-amount" key = {`nutrientinfo-currentAmount ${i}`}>{nutritionInfo[i].currentAmount}</div>)
+            keys.push(<div className="nutrient-amount" key = {`nutrientinfo-desiredAmount ${i}`}>{nutritionInfo[i].desiredAmount}</div>)
+            keys.push(<div className="nutrient-amount" key = {`nutrientinfo-remainingAmount ${i}`}>{nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount}</div>)
+            keys.push(<div className="nutrient-bar" key = {`nutrientinfo-bar ${i}`}>
                 <div className="nutrient-fill-bar" style={fillBarStyle}></div>
             </div>)
         }

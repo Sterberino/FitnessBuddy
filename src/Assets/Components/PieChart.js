@@ -5,8 +5,8 @@ export default function PieChart()
 {
     const colors = [
         {
-            "fillColor" : "rgba(114, 255, 255, 1)",
-            "glowColor" : "rgba(134, 255, 255, 0.6)"
+            "fillColor" : "rgba(134, 255, 255, 1)",
+            "glowColor" : "rgba(154, 255, 255, 0.6)"
         },
         {
             "fillColor" : "rgba(0, 215, 255, 1)",
@@ -52,6 +52,7 @@ export default function PieChart()
         {
             
                 let sliceCenterAngle = (runningTotal + percentages[i] / 2 ) * 2 * Math.PI
+                
                 /*sliceCenterAngle *= (180 / Math.PI)
                 console.log(`sliceCenterAngle : ${sliceCenterAngle}`)
                 sliceCenterAngle *= (Math.PI / 180)*/
@@ -59,7 +60,7 @@ export default function PieChart()
                     "background" : `conic-gradient(rgba(0,0,0,0) ${runningTotal * 360}deg, ${colors[i].fillColor} ${runningTotal * 360}deg, ${colors[i].fillColor} ${(runningTotal + percentages[i]) * 360}deg, rgba(0,0,0,0) ${(runningTotal + percentages[i]) * 360 + 0.05}deg`,
                     "filter" : `drop-shadow(0px 0px 5.5px ${colors[i].glowColor}`
                 }}>
-                    {percentages[i] === GetPercentages()[i] && <div className="pie-chart-text" style={{
+                    {percentages[i] === GetPercentages()[i]  && GetPercentages()[i] !== 0 && <div className="pie-chart-text" style={{
                         "top" : `${Math.sin(sliceCenterAngle  - Math.PI / 2) * 31 + 40}%`,
                         "left" : `${Math.cos(sliceCenterAngle - Math.PI / 2) * 31 + 40}%`,
                     }}>{`${Math.trunc(percentages[i] * 100)}%`}</div>}
@@ -92,7 +93,6 @@ export default function PieChart()
                     {
                         val = GetPercentages()[i]
                     }
-                    console.log(val)
                     currentValues[i] = val;
                     setCurrentFill(currentValues);
                     setSlices (GetPieSlices(currentFill));
@@ -103,7 +103,6 @@ export default function PieChart()
 
             if(!changed)
             {
-                console.log('Clearing timeout')
                 clearTimeout(interval)
             }
         }, 2.5)
