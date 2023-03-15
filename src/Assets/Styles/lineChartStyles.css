@@ -1,0 +1,40 @@
+.weight-progress-header{
+    margin-top: 5px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 5%;
+    padding-right: 5%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.weight-progress-header > .title{
+    font-size: 1.25em;
+}
+
+.weight-progress-header > .add-button
+{
+    --b: 2px;
+    position: absolute;
+    height: 17px;
+    width: 17px;
+    justify-self: end;
+    margin-right: 5px;
+    transition: filter 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.weight-progress-header > .add-button:hover
+{
+    filter: drop-shadow(0 0 2px rgba(255,255,255, 0.6)) brightness(1.5);
+    transform: scale(1.025, 1.025);
+    cursor: pointer;
+}
+
+
+.weight-progress-header > .nutrient-amount
+{
+    grid-column-start: 1;
+    font-size: 0.7em;
+}

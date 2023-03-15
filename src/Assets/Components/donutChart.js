@@ -3,7 +3,7 @@ import Barfill from "./donutChartBarfill.js"
 
 import '../Styles/donutChartStyles.css'
 
-export default function DonutChart()
+export default function DonutChart({nutritionInformation, height, width})
 {
     const [currentFill, setCurrentFill] = React.useState([0, 0, 0])
 
@@ -57,7 +57,7 @@ export default function DonutChart()
     function GetFillPercentages()
     {
         const percentages = [0.5, 0.15, 0.35]
-        return percentages
+        return nutritionInformation ? nutritionInformation : percentages;
     }
 
     function InitBars()
@@ -203,7 +203,10 @@ export default function DonutChart()
     const numValues = 3;
 
     return (
-    <div className="donut-chart">
+    <div className="donut-chart" style = {{
+        ...(height && {'height' : height}),
+        ...(width && {'width' : height}),
+    }}>
         {bars}
         <div className="inner"></div>        
     </div>
