@@ -16,7 +16,6 @@
 
 .weight-progress-header > .add-button
 {
-    --b: 2px;
     position: absolute;
     height: 17px;
     width: 17px;

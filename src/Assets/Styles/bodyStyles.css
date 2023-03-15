@@ -27,6 +27,15 @@
                 0 3px 3px rgba(0, 0, 0, 0.6);
 }
 
+.displayCard.header-card{
+    position: fixed;
+    z-index: 2;
+    top : calc(0vh - 10px);
+    min-width: 360px;
+    width: 80px;
+    height: 80px;
+}
+
 body{
     background: rgba(9, 16, 24, 1);
     height: 100vh;
