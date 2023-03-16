@@ -2,7 +2,9 @@ import React from "react";
 import '../Styles/bodyStyles.css'
 import '../Styles/nutritionPageStyles.css'
 
+import DonutChart from './donutChart.js'
 import WeightAreaChart from './WeightAreaChart.js';
+import DashboardMacroOverview from "./DashboardMacroOverview.js";
 
 export default function Dashboard()
 {
@@ -29,8 +31,13 @@ export default function Dashboard()
                 {GetName()}
             </div>
 
+            <DashboardMacroOverview />
 
-            <div className="displayCard">
+            <div 
+                className="displayCard"
+                style= {{
+                    "marginBottom" : "80px"
+                }}>
                 <WeightAreaChart data = {
                 [
                     {
@@ -41,6 +48,7 @@ export default function Dashboard()
                         x : "02/23",
                         y : 164
                     },
+                    
                     {
                         x : "03/23",
                         y : 172

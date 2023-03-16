@@ -82,11 +82,59 @@ export default function NutritionKeys()
                 "unit" : "G"
             },
             {
-                "Name" : "Saturated Fat",
-                "currentAmount" : 5,
-                "desiredAmount" : 19,
+                "Name" : "Polyunsaturated Fat",
+                "currentAmount" : 1,
+                "desiredAmount" : 0,
                 "unit" : "G"
-            }
+            },
+            {
+                "Name" : "Monounsaturated Fat",
+                "currentAmount" : 5,
+                "desiredAmount" : 0,
+                "unit" : "G"
+            },
+            {
+                "Name" : "Cholesterol",
+                "currentAmount" : 0,
+                "desiredAmount" : 0,
+                "unit" : "mg"
+            },
+            {
+                "Name" : "Sodium",
+                "currentAmount" : 220,
+                "desiredAmount" : 2300,
+                "unit" : "mg"
+            },
+            {
+                "Name" : "Potassium",
+                "currentAmount" : 216,
+                "desiredAmount" : 3500,
+                "unit" : "mg"
+            },
+            {
+                "Name" : "Vitamin A",
+                "currentAmount" : 20,
+                "desiredAmount" : 100,
+                "unit" : ""
+            },
+            {
+                "Name" : "Vitamin C",
+                "currentAmount" : 85,
+                "desiredAmount" : 100,
+                "unit" : ""
+            },
+            {
+                "Name" : "Calcium",
+                "currentAmount" : 4,
+                "desiredAmount" : 100,
+                "unit" : ""
+            },
+            {
+                "Name" : "Iron",
+                "currentAmount" : 4,
+                "desiredAmount" : 100,
+                "unit" : ""
+            },
         ]
 
         return NutritionInfo;
@@ -95,12 +143,22 @@ export default function NutritionKeys()
     function GetFillPercentages()
     {
         return GetNutritionInfo().map(item => {
-            return item.currentAmount / item.desiredAmount;
+            if(item.currentAmount === 0 && item.desiredAmount == 0)
+            {
+                return 0;
+            }
+            else if(item.currentAmount > 0 && item.desiredAmount == 0)
+            {
+                return 1;
+            }
+            else{
+                return item.currentAmount / item.desiredAmount;
+            }
         })
     }
 
     const [body, setBody] = React.useState(<></>)
-    const [currentFill, setCurrentFill] = React.useState([0,0,0,0,0,0])
+    const [currentFill, setCurrentFill] = React.useState(new Array( GetNutritionInfo().length).fill(0))
 
     React.useEffect(() => {
         let interval = setInterval(()=> {
@@ -130,7 +188,7 @@ export default function NutritionKeys()
                     continue;
                 }
                 else{
-                    let val = currentValues[i] + 0.02;
+                    let val = currentValues[i] + 0.03;
                     if(val > fillPercentages[i])
                     {
                         val = fillPercentages[i]
@@ -204,7 +262,7 @@ export default function NutritionKeys()
             keys.push(<div className="title nutrient-title" key = {`nutrient-title ${i}`}>{nutritionInfo[i].Name}</div>)
             keys.push(<div className="nutrient-amount" key = {`nutrientinfo-currentAmount ${i}`}>{nutritionInfo[i].currentAmount}</div>)
             keys.push(<div className="nutrient-amount" key = {`nutrientinfo-desiredAmount ${i}`}>{nutritionInfo[i].desiredAmount}</div>)
-            keys.push(<div className="nutrient-amount" key = {`nutrientinfo-remainingAmount ${i}`}>{nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount}</div>)
+            keys.push(<div className="nutrient-amount" key = {`nutrientinfo-remainingAmount ${i}`}>{nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount < 0 ? 0 : nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount}</div>)
             keys.push(<div className="nutrient-bar" key = {`nutrientinfo-bar ${i}`}>
                 <div className="nutrient-fill-bar" style={fillBarStyle}></div>
             </div>)

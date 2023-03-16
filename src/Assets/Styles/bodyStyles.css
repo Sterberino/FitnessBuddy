@@ -44,3 +44,24 @@ body{
     align-items: start;
     justify-content: center;
 }
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    height: 100%;
+    width:  100%;
+}
+
+.column-flex
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}

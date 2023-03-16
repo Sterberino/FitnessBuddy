@@ -78,7 +78,8 @@ class AreaChart extends Component {
               },
             crosshairs : {
                 show : false
-            }
+            }, 
+            type : "category"
         }, 
         fill : {
             type: "gradient",
