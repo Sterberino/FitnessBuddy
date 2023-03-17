@@ -1,10 +1,12 @@
 import React from "react";
 import '../Styles/bodyStyles.css'
 import '../Styles/nutritionPageStyles.css'
+import '../Styles/lineChartStyles.css'
 
 import DonutChart from './donutChart.js'
 import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
+import DashboardCalorieOverview from "./DashboardCalorieOverview";
 
 export default function Dashboard()
 {
@@ -15,7 +17,7 @@ export default function Dashboard()
     }
 
     return (
-        <>
+        <div>
             <div className="title"
                 style = {{
                     'fontSize' : '1.1em',
@@ -31,6 +33,7 @@ export default function Dashboard()
                 {GetName()}
             </div>
 
+            <DashboardCalorieOverview />
             <DashboardMacroOverview />
 
             <div 
@@ -60,6 +63,6 @@ export default function Dashboard()
                 ]
                 }/>
             </div>
-        </>
+        </div>
     )
 }

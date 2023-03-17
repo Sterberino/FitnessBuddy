@@ -1,7 +1,7 @@
 import React from "react"
 
 import '../Styles/bodyStyles.css'
-
+import '../Styles/lineChartStyles.css'
 
 import DonutChart from "./donutChart.js"
 
@@ -34,8 +34,16 @@ export default function DashboardMacroOverview()
     return(
         
         <div 
-        className="displayCard"
-    >
+            className="displayCard"
+        >
+
+        <div className="weight-progress-header">
+            <div 
+                className="title"
+            >{"Macros"}</div>
+            <div></div>
+        </div>
+
         <div className="row-flex">
             <div className="column-flex"
             >

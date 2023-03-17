@@ -21,12 +21,12 @@ function App() {
 
 
   return (
-  <>
+  <div>
     {footerTabState === 0 && <Dashboard />}
     {footerTabState === 2 && <NutritionOverviewPage />}
     
     <Footer OnClickEvent={(index) => {OnClickFooterTab(index)}}/>
-  </>
+  </div>
   );
 }
 

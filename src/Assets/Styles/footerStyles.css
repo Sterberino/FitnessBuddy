@@ -55,6 +55,11 @@
     cursor: pointer;
 }
 
+.footer-button-selected{
+    filter: drop-shadow(0 0 2px rgba(225,225,225, 0.5)) brightness(1.05);
+    transform: scale(1.025, 1.025);
+}
+
 .footer-icon{
     position: absolute;
     width: 100%;
