@@ -7,6 +7,7 @@ import DonutChart from './donutChart.js'
 import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
+import DatePicker from "./DatePicker.js";
 
 export default function Dashboard()
 {
@@ -18,6 +19,8 @@ export default function Dashboard()
 
     return (
         <div>
+            <DatePicker/>
+
             <div className="title"
                 style = {{
                     'fontSize' : '1.1em',

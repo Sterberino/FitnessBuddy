@@ -15,7 +15,6 @@ function App() {
   
   function OnClickFooterTab(index)
   {
-      console.log(index)
       setFooterTabState(index)
   }
 
