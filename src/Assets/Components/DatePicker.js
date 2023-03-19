@@ -19,7 +19,8 @@ export default function DatePicker()
 {
     const [currentMonth, setCurrentMonth] = React.useState(new Date().getMonth())
     const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear())
-    const [currentDay, setCurrentDay] = React.useState(new Date().getDay())
+    //This is the current selected as (Year, Month, Day)
+    const [currentDay, setCurrentDay] = React.useState(new Date())
 
     const GetRange = (start, end) =>
     {
@@ -73,42 +74,91 @@ export default function DatePicker()
 
     function SelectDay(index)
     {
-        console.log(index)
-        setCurrentDay(index);
+        const date = new Date(currentYear, currentMonth, index)        
+        setCurrentDay(date);
     }
 
+    //Utility function for checking for the same Year, Month, Day
+    function DateIsSame(dateOne, dateTwo)
+    {
+        return(dateOne.getFullYear() === dateTwo.getFullYear() 
+        && dateOne.getMonth() === dateTwo.getMonth() 
+        && dateOne.getDate() === dateTwo.getDate())
+    }
+
+    //Maps each date to a button that can be selected.
+    function GetDayButton(year, month, day)
+    {
+        const date = new Date(year, month, day);
+        const currentDate = new Date();
+        const selectedDate = currentDay      
+
+        let classString = "";
+        let fontClass = ""
+
+        if(DateIsSame(date, selectedDate))
+        { 
+            classString= "day-button selected-day-button"
+            fontClass = "selected"                    
+        }
+        else if(DateIsSame(date, currentDate) && !DateIsSame(date, selectedDate))
+        {
+            classString= "day-button current-day-button"        
+            fontClass = "unselected"
+        }
+        else{
+            classString = "day-button"
+            fontClass = "unselected"
+        }
+
+        return <div 
+            className= {classString}
+            key = {day}
+            onClick = {() => {SelectDay(day)}}
+            style = {{
+                cursor : "pointer"
+            }}
+        >
+            <div className= {fontClass}>{day}</div>
+        </div>
+
+    }
 
     return (
         <div className= "displayCard">
-            <div className="row-flex">
-                <img 
-                    src= {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`} 
-                    className = "footer-button" 
-                    onClick={()=> {PreviousMonth()}}
-                />
-                <div className="title">{monthNames[currentMonth]} {currentYear}</div>
-                <img 
-                    src= {`${process.env.PUBLIC_URL}/Images/Right-Arrow-Icon.png`} 
-                    className = "footer-button" 
-                    onClick={()=> {NextMonth()}}
-                />
+            <div className="date-picker-header">
+
+                <div className="date-picker-header-section">
+                    <div className="title">{monthNames[currentMonth]} {currentYear}</div>
+                    <img 
+                        src= {`${process.env.PUBLIC_URL}/Images/Down-Arrow-Icon-B.png`} 
+                        className = "footer-button" 
+                        style = {{
+                            filter: "brightness(0.6)",
+                        }}
+                    />
+                </div>
+                
+                <div className="date-picker-header-section">
+                    <img 
+                        src= {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`} 
+                        className = "footer-button" 
+                        onClick={()=> {PreviousMonth()}}
+                    />
+                    <img 
+                        src= {`${process.env.PUBLIC_URL}/Images/Right-Arrow-Icon.png`} 
+                        className = "footer-button" 
+                        onClick={()=> {NextMonth()}}
+                    />
+                </div>
             </div>
             
             <div className="seven-column-grid">
-                {GetSortedDays(currentYear, currentMonth).map((day,index) => <div className="nutrient-amount" key = {index}>{day}</div>)}
+                {GetSortedDays(currentYear, currentMonth).map((day,index) => <div className="title" key = {index}>{day}</div>)}
                 </div>
             <div className="seven-column-grid">
                 {GetRange(1, GetDaysInMonth(currentYear, currentMonth) + 1).map(day => {
-                    return <div 
-                        className= {`day-button ${currentDay === day ? 'selected-day-button' : ''}`} 
-                        key = {day}
-                        onClick = {() => {SelectDay(day)}}
-                        style = {{
-                            cursor : "pointer"
-                        }}
-                    >
-                        {day + 1}
-                    </div>
+                    return GetDayButton(currentYear, currentMonth, day + 1)
                 })}
             </div>
         </div>
