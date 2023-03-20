@@ -101,3 +101,111 @@
     align-items: center;
 }
 
+.year-menu-button{
+    transition: all 0.25s ease-in-out;
+    transform-origin: 50% 50%;
+}
+
+.year-menu-button:hover
+{
+    transform: scale(1.025);
+    filter: brightness(1.25);
+}
+
+.year-menu{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    height: 320px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    width : 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+.year-menu > * {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    
+    transition: all 0.25s ease;
+    transform-origin: 50% 50%;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+
+
+.year-menu > * > *{
+    
+    z-index: 2;
+    text-align: center;
+    
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 0.7em;
+    
+    transition: all 0.25s ease;
+}
+
+.year-menu > *:hover
+{
+    transform: scale(1.025);
+}
+
+
+
+.year-menu > * > .unselected {
+    color: rgba(190, 190, 190, 1);
+    z-index: 2;
+
+}
+
+.year-menu > *:hover >.unselected {
+    color: rgba(210, 210, 210, 1);
+    text-shadow: 0px 0px 2px rgba(255,255,255, 0.6);
+}
+
+.year-menu > * > .selected {
+    color: rgba(9, 16, 24, 1);
+    z-index: 2;
+    position: relative;
+
+    transition: all 0.25s ease-in-out;
+}
+
+.year-menu > *:hover >.selected{
+    color: rgba(9,16,24, 1);
+    text-shadow: 0px 0px 2px rgba(19,26,34, 0.6);
+}
+
+
+
+.year-menu > .current-year-button::before
+{
+    z-index: 0;
+    content: '';
+    display: inline-block;
+    width: 55px;
+    height: 25px;
+    position:absolute;
+    top: -7px;
+    left: 10px;
+    border: 1px solid rgba(190, 190, 210, 1);
+    border-radius: 20px;
+}
+
+.year-menu > .selected-year-button::after{
+    z-index: 0;
+    content: '';
+    display: inline-block;
+    width: 55px;
+    height: 25px;
+    position:absolute;
+    top: -7px;
+    left: 10px;
+    border-radius: 20px;
+    background : rgba(0, 195, 255, 1);
+    filter: drop-shadow(0px 0px 2px rgba(0, 215, 255, 0.6));
+}

@@ -22,6 +22,8 @@ export default function DatePicker()
     //This is the current selected as (Year, Month, Day)
     const [currentDay, setCurrentDay] = React.useState(new Date())
 
+    const [yearSelectionOpen, setYearSelectionOpen] = React.useState(false);
+
     const GetRange = (start, end) =>
     {
         const length = Math.abs((end - start) / 1);
@@ -78,6 +80,11 @@ export default function DatePicker()
         setCurrentDay(date);
     }
 
+    function SelectYear(year)
+    {
+        setCurrentYear(year);
+    }
+
     //Utility function for checking for the same Year, Month, Day
     function DateIsSame(dateOne, dateTwo)
     {
@@ -116,7 +123,8 @@ export default function DatePicker()
             key = {day}
             onClick = {() => {SelectDay(day)}}
             style = {{
-                cursor : "pointer"
+                cursor : "pointer",
+                userSelect : "none"
             }}
         >
             <div className= {fontClass}>{day}</div>
@@ -124,22 +132,117 @@ export default function DatePicker()
 
     }
 
+    function ToggleYearSelection()
+    {
+        setYearSelectionOpen(prev => !prev);
+    }
+
+    function MonthlyCalendar()
+    {
+        return (
+            <>
+                <div className="seven-column-grid">
+                    {GetSortedDays(currentYear, currentMonth).map((day,index) => <div className="title" key = {index}>{day}</div>)}
+                </div>
+                <div className="seven-column-grid">
+                    {GetRange(1, GetDaysInMonth(currentYear, currentMonth) + 1).map(day => {
+                        return GetDayButton(currentYear, currentMonth, day + 1)
+                    })}
+                </div>
+            </>
+        )
+    }
+
+    function GetYearButton(buttonYear)
+    {
+        const year = new Date().getFullYear();
+
+        if(buttonYear === currentYear)
+        {
+            return <div 
+                onClick={()=> {SelectYear(buttonYear)}}
+                key={buttonYear}
+                className = {"selected-year-button"} 
+                >
+                    <div className="selected">{buttonYear}</div>
+                </div>  
+        }
+        else if(buttonYear === year)
+        {
+            return <div 
+                onClick={()=> {SelectYear(buttonYear)}}
+                key={buttonYear}
+                className = {"current-year-button"} 
+            >
+                <div className="unselected">{buttonYear}</div>
+            </div>  
+        }
+        else
+        {
+            return <div 
+                onClick={()=> {SelectYear(buttonYear)}}
+                key={buttonYear}
+                className = {""} 
+            >
+                <div className="unselected">{buttonYear}</div>
+            </div>  
+        }
+    }
+
+    function YearSelectionMenu()
+    {
+        const year = new Date().getFullYear();
+        let i = 0;
+        let currentYearButton = null;
+        const Arr = new Array(200);
+
+        for(i; i < 200; i++)
+        {
+            let yearButton = GetYearButton(year - 100 + i);
+
+            if(year - 100 + i === year)
+            {
+                currentYearButton = yearButton;
+            }
+
+            Arr[i] = yearButton
+        }
+
+        const YearMenu = <div className="year-menu">
+            {Arr}
+        </div>
+        
+        return (
+            YearMenu
+        )
+    }
+
+
     return (
         <div className= "displayCard">
             <div className="date-picker-header">
 
-                <div className="date-picker-header-section">
+                <div 
+                    className="date-picker-header-section year-menu-button"
+                    onClick={()=> {ToggleYearSelection()}}
+                    style = {{
+                        cursor : "pointer",
+                        userSelect : "none"
+                    }}
+                >
                     <div className="title">{monthNames[currentMonth]} {currentYear}</div>
                     <img 
                         src= {`${process.env.PUBLIC_URL}/Images/Down-Arrow-Icon-B.png`} 
                         className = "footer-button" 
                         style = {{
+                            pointerEvents: "none",
                             filter: "brightness(0.6)",
+                            transform : (yearSelectionOpen ? "rotate(-180deg)" : "")
                         }}
                     />
                 </div>
                 
-                <div className="date-picker-header-section">
+                {!yearSelectionOpen && <div className="date-picker-header-section">
                     <img 
                         src= {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`} 
                         className = "footer-button" 
@@ -150,17 +253,10 @@ export default function DatePicker()
                         className = "footer-button" 
                         onClick={()=> {NextMonth()}}
                     />
-                </div>
+                </div>}
             </div>
             
-            <div className="seven-column-grid">
-                {GetSortedDays(currentYear, currentMonth).map((day,index) => <div className="title" key = {index}>{day}</div>)}
-                </div>
-            <div className="seven-column-grid">
-                {GetRange(1, GetDaysInMonth(currentYear, currentMonth) + 1).map(day => {
-                    return GetDayButton(currentYear, currentMonth, day + 1)
-                })}
-            </div>
+            {yearSelectionOpen ? YearSelectionMenu() : MonthlyCalendar()}
         </div>
 
     )
