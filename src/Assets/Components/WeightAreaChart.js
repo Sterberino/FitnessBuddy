@@ -121,7 +121,7 @@ class AreaChart extends Component {
         <div>
             <div className="weight-progress-header">
                 <div className="title">{"Weight"}</div>
-                <img className="add-button" src = {`${process.env.PUBLIC_URL}/Images/Plus-sign.png`} />
+                <div></div>
                 <div className="nutrient-amount">{"last 90 days"}</div>
             </div>
            

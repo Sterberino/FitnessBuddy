@@ -9,6 +9,7 @@ import './Assets/Styles/footerStyles.css'
 import NutritionOverviewPage from './Assets/Components/NutritionOverviewPage.js';
 import Footer from './Assets/Components/Footer.js';
 import Dashboard from './Assets/Components/Dashboard.js';
+import DiaryPage from './Assets/Components/DiaryPage.js';
 
 export const DateContext = React.createContext(null)
 
@@ -28,6 +29,7 @@ function App() {
   <div>
     <DateContext.Provider value = {{currentDate : currentDate, setCurrentDate : setCurrentDate}}>
     {footerTabState === 0 && <Dashboard />}
+    {footerTabState === 1 && <DiaryPage/>}
     {footerTabState === 2 && <NutritionOverviewPage />}
     
     <Footer OnClickEvent={(index) => {OnClickFooterTab(index)}}/>

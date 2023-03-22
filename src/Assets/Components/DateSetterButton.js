@@ -4,7 +4,7 @@ import {dayNames, monthNames} from "./DatePicker";
 import DatePicker from "./DatePicker"
 import { DateContext } from "../../App.js";
 
-export default function DateSetterButton(props)
+export default function DateSetterButton()
 {
     const [datepickerOpen, setDatepickerOpen] = React.useState(false);
     const {currentDate, setCurrentDate} = useContext(DateContext)

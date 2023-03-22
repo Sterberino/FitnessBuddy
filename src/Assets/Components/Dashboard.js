@@ -44,7 +44,7 @@ export default function Dashboard()
                     "marginBottom" : "80px"
                 }}
             >
-                <DateSetterButton />
+                
                 <WeightAreaChart data = {
                 [
                     {
