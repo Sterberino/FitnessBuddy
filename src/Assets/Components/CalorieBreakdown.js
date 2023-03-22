@@ -35,7 +35,9 @@ export default function CalorieBreakdown()
     }
 
 
-    return(<div className="calorie-breakdown-grid">
+    return(
+        <>
+        <div className="calorie-breakdown-grid">
                 <div className="meal-key">
                     <div className="key-symbol" style ={{ 
                         "backgroundColor" : colors[0].fillColor,
@@ -68,5 +70,30 @@ export default function CalorieBreakdown()
                     <div className="title nutrient-name">{"Snacks"}</div>
                     <div className="nutrient-amount">{`(${Math.trunc(GetCalorieAmounts()[0])}Cal)`}</div>
                 </div>
-        </div>)
+        </div>
+
+        <div className="nutrient-keys-divider"></div>
+        <div className="row-flex">
+            <div className="title">{"Total Calories"}</div>
+            <div className="nutrient-amount">{"0"}</div>
+
+        </div>
+        <div className="nutrient-keys-divider"></div>
+        <div className="row-flex">
+            <div className="title">{"Net Calories"}</div>
+            <div className="nutrient-amount">{"0"}</div>
+
+        </div>
+        <div className="nutrient-keys-divider"></div>
+        <div className="row-flex">
+            <div className="title">{"Goal"}</div>
+            <div 
+                className="nutrient-amount"
+                style = {{
+                    color : "rgba(0,195, 255, 1)"
+                }}
+            >{"1750"}</div>
+        </div>
+        </>    
+    )
 }

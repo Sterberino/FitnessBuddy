@@ -7,7 +7,7 @@ import DonutChart from './donutChart.js'
 import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
-import DatePicker from "./DatePicker.js";
+import DateSetterButton from "./DateSetterButton.js";
 
 export default function Dashboard()
 {
@@ -17,43 +17,9 @@ export default function Dashboard()
         return name;
     }
 
+
     return (
         <div>
-            <div
-                style = {{
-                    position: "fixed",
-                    left : "50%",
-                    top : "50%",
-                    marginTop: "-230px",
-                    marginLeft : "-185px",
-                    zIndex :  "10"
-                }}
-            >
-                <div
-                    style = {{
-                        width: "100vw",
-                        height : "200vh",
-                        left : "50%",
-                        right: "50%",
-                        marginTop: "-50vw",
-                        marginLeft : "-50vw",
-                        zIndex: "1",
-                        backgroundColor : "rgba(0,0,0,0.5)",
-                        backdropFilter : "blur(4px)",
-                        position : "fixed"
-                    }}
-                >    
-                </div>
-                <DatePicker
-                    style = {{
-                        zIndex : "11",
-                        position: "fixed",
-                        width : "360px",
-                        height : "min-content",
-                        maxHeight : "450px",
-                        justifyContent : "flex-start"
-                    }}/>
-            </div>
             <div className="title"
                 style = {{
                     'fontSize' : '1.1em',
@@ -72,11 +38,13 @@ export default function Dashboard()
             <DashboardCalorieOverview />
             <DashboardMacroOverview />
 
-            <div 
+            <div
                 className="displayCard"
                 style= {{
                     "marginBottom" : "80px"
-                }}>
+                }}
+            >
+                <DateSetterButton />
                 <WeightAreaChart data = {
                 [
                     {

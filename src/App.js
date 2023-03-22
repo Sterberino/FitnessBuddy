@@ -10,21 +10,28 @@ import NutritionOverviewPage from './Assets/Components/NutritionOverviewPage.js'
 import Footer from './Assets/Components/Footer.js';
 import Dashboard from './Assets/Components/Dashboard.js';
 
+export const DateContext = React.createContext(null)
+
 function App() {
   const [footerTabState, setFooterTabState] = React.useState(0);
-  
+  const [currentDate, setCurrentDate] = React.useState(new Date())
+
   function OnClickFooterTab(index)
   {
-      setFooterTabState(index)
+    window.scrollTo(0, 0);
+    setFooterTabState(index)
   }
 
+  window.scrollTo(0, 0);
 
   return (
   <div>
+    <DateContext.Provider value = {{currentDate : currentDate, setCurrentDate : setCurrentDate}}>
     {footerTabState === 0 && <Dashboard />}
     {footerTabState === 2 && <NutritionOverviewPage />}
     
     <Footer OnClickEvent={(index) => {OnClickFooterTab(index)}}/>
+    </DateContext.Provider>
   </div>
   );
 }

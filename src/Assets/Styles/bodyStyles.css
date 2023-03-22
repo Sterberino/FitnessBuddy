@@ -66,3 +66,16 @@ body{
     align-items: center;
     margin-top: 10px;
 }
+
+.background-blur{
+    width: 100vw;
+    height : 300vh;
+    left : 50%;
+    right: 50%;
+    margin-top: -150vh;
+    margin-left : -50vw;
+    z-index: 1;
+    background-color : rgba(0,0,0,0.4);
+    backdrop-filter : blur(3px);
+    position : fixed;
+}

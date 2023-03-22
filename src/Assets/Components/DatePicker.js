@@ -20,13 +20,13 @@ export default function DatePicker(props)
     const [currentMonth, setCurrentMonth] = React.useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear());
     //This is the current selected as (Year, Month, Day)
-    const [currentDay, setCurrentDay] = React.useState(new Date());
+    const [currentDay, setCurrentDay] = React.useState(props.currentDate ? props.currentDate : new Date());
 
     const [yearSelectionOpen, setYearSelectionOpen] = React.useState(false);
 
     const [inputMode, setInputMode] = React.useState(false);
 
-    const [dateInput, setDateInput] = React.useState('');
+    const [dateInput, setDateInput] = React.useState(`${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`);
     const [inputErrorMessage, setInputErrorMessage]= React.useState('');
 
     const GetRange = (start, end) =>
@@ -144,15 +144,7 @@ export default function DatePicker(props)
 
     React.useEffect(()=>{
         let interval = null;
-        if(InputIsValid())
-        {
-            interval = setTimeout( () => {}, 1)
-            HandleInput();
-        }
-        else
-        {
-            interval = setTimeout( () => {HandleInput()}, 2000)
-        }
+        HandleInput();
         
         
         return() => clearTimeout(interval)
@@ -380,7 +372,7 @@ export default function DatePicker(props)
                         backgroundSize : "30px 30px",
                         marginBottom : inputErrorMessage === '' ? '20px' : ''
                     }}
-                    autocomplete="off"
+                    autoComplete="off"
                     autoFocus = {true}
                     id = "date-text-input"
                     type="text" 
@@ -446,14 +438,19 @@ export default function DatePicker(props)
                 {DateInputMode()}
             </>}
 
-            {SubmitDateChange && CancelDateChange && <div className="date-picker-footer">
-                <div className="date-picker-footer-button">{"Cancel"}</div>
+            {SubmitDateChange && typeof SubmitDateChange === "function" && CancelDateChange && typeof CancelDateChange === "function" &&
+            <div className="date-picker-footer">
+                <div 
+                    className="date-picker-footer-button"
+                    onClick={() => {CancelDateChange()}}
+                >{"Cancel"}</div>
                 <div 
                     className="date-picker-footer-button"
                     style={{
                         pointerEvents: inputErrorMessage === '' ? '' : "none",
                         color : inputErrorMessage === '' ? '' : "rgba(160,160,160,1)",
                     }}
+                    onClick = {inputErrorMessage === '' ? () => {SubmitDateChange(currentDay)} : ()=>{}}
                 >{"Ok"}</div>
             </div>}
         </div>
