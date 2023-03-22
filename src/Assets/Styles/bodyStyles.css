@@ -16,7 +16,8 @@
     min-height: max-content;
     width: 80%;
     height: 80%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     align-items: center;
     justify-content:center;

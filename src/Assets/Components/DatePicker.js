@@ -15,14 +15,19 @@ export const dayNames = [
     "Sat"
 ]
 
-export default function DatePicker()
+export default function DatePicker(props)
 {
-    const [currentMonth, setCurrentMonth] = React.useState(new Date().getMonth())
-    const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear())
+    const [currentMonth, setCurrentMonth] = React.useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear());
     //This is the current selected as (Year, Month, Day)
-    const [currentDay, setCurrentDay] = React.useState(new Date())
+    const [currentDay, setCurrentDay] = React.useState(new Date());
 
     const [yearSelectionOpen, setYearSelectionOpen] = React.useState(false);
+
+    const [inputMode, setInputMode] = React.useState(false);
+
+    const [dateInput, setDateInput] = React.useState('');
+    const [inputErrorMessage, setInputErrorMessage]= React.useState('');
 
     const GetRange = (start, end) =>
     {
@@ -36,6 +41,123 @@ export default function DatePicker()
         );
         return result;
     }
+
+    const HandleInput = ()=> {  
+        let validInput = true;
+        //Check for valid format(does it match mm/dd/yyyy ?)
+        let datesInput = dateInput.split('/')
+        if(datesInput.length != 3 || datesInput[0].length != 2 || datesInput[1].length != 2 || datesInput[2].length != 4)
+        {
+            setInputErrorMessage(`Invalid Format.\nUse mm/dd/yyyy.\nExample: ${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
+            validInput = false;
+            return;
+        }
+        
+        let datesInputAsNumbers = datesInput.map(item => {
+            return Number(item)
+        })
+        
+        datesInputAsNumbers.forEach(item => {
+            if(isNaN(item))
+            {
+                let d = new Date();
+                validInput = false;
+                setInputErrorMessage(`Invalid Format.\nUse mm/dd/yyyy.\nExample: ${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
+                return;
+            }
+        })
+
+        //Check for numbers out of range of our selectable dates
+        if(datesInputAsNumbers[0] < 1 || datesInputAsNumbers[0] > 12)
+        {
+            validInput = false;
+            setInputErrorMessage('Date input out of range.')
+            return;
+        }
+
+        let year = new Date().getFullYear();
+        if(datesInputAsNumbers[2] > year + 99 || datesInputAsNumbers[2] < year - 100)
+        {
+            validInput = false;
+            setInputErrorMessage('Date input out of range.')
+            return;
+        }
+
+        let daysInMonth = GetDaysInMonth(datesInput[2], datesInputAsNumbers[0] - 1);
+        if(datesInputAsNumbers[1] < 1 || datesInputAsNumbers[1] > daysInMonth)
+        {
+            validInput = false;
+            setInputErrorMessage('Date input out of range.')
+            return;
+        }
+
+
+        if(validInput)
+        {
+            setInputErrorMessage('')
+            setCurrentYear(datesInputAsNumbers[2])
+            setCurrentMonth(datesInputAsNumbers[0] - 1)
+            setCurrentDay(new Date(datesInputAsNumbers[2] , datesInputAsNumbers[0] - 1, datesInputAsNumbers[1]))
+        }
+    }
+
+    const InputIsValid = ()=> {
+        //Check for valid format(does it match mm/dd/yyyy ?)
+        let datesInput = dateInput.split('/')
+        if(datesInput.length != 3 || datesInput[0].length != 2 || datesInput[1].length != 2 || datesInput[2].length != 4)
+        {
+            return false;
+        }
+        
+        let datesInputAsNumbers = datesInput.map(item => {
+            return Number(item)
+        })
+        
+        datesInputAsNumbers.forEach(item => {
+            if(isNaN(item))
+            {
+                let d = new Date();
+                return false;
+            }
+        })
+
+        //Check for numbers out of range of our selectable dates
+        if(datesInputAsNumbers[0] < 1 || datesInputAsNumbers[0] > 12)
+        {
+            return false;
+        }
+
+        let year = new Date().getFullYear();
+        if(datesInputAsNumbers[2] > year + 99 || datesInputAsNumbers[2] < year - 100)
+        {
+            return false;
+        }
+
+        let daysInMonth = GetDaysInMonth(datesInput[2], datesInputAsNumbers[0] - 1);
+        if(datesInputAsNumbers[1] < 1 || datesInputAsNumbers[1] > daysInMonth)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    React.useEffect(()=>{
+        let interval = null;
+        if(InputIsValid())
+        {
+            interval = setTimeout( () => {}, 1)
+            HandleInput();
+        }
+        else
+        {
+            interval = setTimeout( () => {HandleInput()}, 2000)
+        }
+        
+        
+        return() => clearTimeout(interval)
+        
+    },[dateInput])
 
     function GetSortedDays(year, month)
     {
@@ -217,9 +339,70 @@ export default function DatePicker()
         )
     }
 
+    function DatepickerHeader()
+    {
+        return (
+            <div className="date-picker-selector">
+                <div className="select-date">{"SELECT DATE"}</div>
+                <div className="mid-section">
+                    <div className="current-date">{`${monthNames[currentDay.getMonth()]} ${currentDay.getDate()}, ${currentDay.getFullYear()}`}</div>
+                    <img 
+                        src = { inputMode ? `${process.env.PUBLIC_URL}/Images/Calendar-Icon.png` : `${process.env.PUBLIC_URL}/Images/edit-pen-icon.png`}
+                        onClick = {()=> {
+                            setInputErrorMessage('')
+                            setDateInput(`${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
+                            setInputMode(prev => !prev)
+                        }}
+                    />
+                </div>
+            </div>
+        )
+    }
+
+    function DateInputMode()
+    {
+        function GetErrorDivs()
+        {
+            let errorLines = inputErrorMessage.split('\n')
+            return errorLines.map((item, index) => <div className="error-text" key = {index} style = {{marginBottom : index === errorLines.length - 1 ? '20px' : '1px'}}>{item}</div>)
+        }
+
+        return (
+            <form 
+                onSubmit={(event)=> {event.preventDefault()}}
+                className = "date-input-form"
+            >
+              <label htmlFor = "date-text-input">{"Date"}</label>
+              <input 
+                  style = {{
+                        backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
+                        backgroundRepeat : "no-repeat",
+                        backgroundSize : "30px 30px",
+                        marginBottom : inputErrorMessage === '' ? '20px' : ''
+                    }}
+                    autocomplete="off"
+                    autoFocus = {true}
+                    id = "date-text-input"
+                    type="text" 
+                    value={dateInput}
+                    onChange={(e)=> { 
+                        setDateInput( e.target.value)
+                    }}
+                />
+                {inputErrorMessage !== '' && GetErrorDivs()}
+               
+            </form>
+          )
+    }
+    let SubmitDateChange = props.SubmitDateChange ? props.SubmitDateChange : true;
+    let CancelDateChange = props.CancelDateChange ? props.CancelDateChange : true;
 
     return (
-        <div className= "displayCard">
+        <div className= "displayCard"
+            style = {props.style ? props.style  : null}
+        >
+            {DatepickerHeader()}
+            {!inputMode && <>
             <div className="date-picker-header">
 
                 <div 
@@ -257,6 +440,22 @@ export default function DatePicker()
             </div>
             
             {yearSelectionOpen ? YearSelectionMenu() : MonthlyCalendar()}
+            </>}
+
+            {inputMode && <>
+                {DateInputMode()}
+            </>}
+
+            {SubmitDateChange && CancelDateChange && <div className="date-picker-footer">
+                <div className="date-picker-footer-button">{"Cancel"}</div>
+                <div 
+                    className="date-picker-footer-button"
+                    style={{
+                        pointerEvents: inputErrorMessage === '' ? '' : "none",
+                        color : inputErrorMessage === '' ? '' : "rgba(160,160,160,1)",
+                    }}
+                >{"Ok"}</div>
+            </div>}
         </div>
 
     )
