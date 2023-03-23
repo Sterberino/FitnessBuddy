@@ -71,12 +71,9 @@ export default function DiaryItemCard({ItemTitle, style})
             {GetItems()}
             <div className="row-flex">
                 <div 
-                    className="title"
+                    className="blue-title"
                     style = {{
-                        width: "100%",
-                        marginLeft: "-5px",
-                        marginTop: "5px",
-                        color: "rgba(0, 190, 255)"
+                        marginTop: "5px"
                     }}  
                 >{`Add ${ItemTitle}`}</div>    
                 <div className="title">{" "}</div>
