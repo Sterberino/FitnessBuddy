@@ -1,7 +1,7 @@
 .footer-card{
     position: fixed;
     bottom: calc(0vh - 10px);
-    z-index: 3;
+    z-index: 1;
     background-image: linear-gradient(135deg, rgba(45,55,65,1), rgba(26, 33, 39, 1));
     border-radius: 4px;
     padding-right: 50px;
