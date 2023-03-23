@@ -1,7 +1,7 @@
 import React from "react";
 import '../Styles/footerStyles.css'
 
-export default function Footer({OnClickEvent})
+export default function Footer({OnClickEvent, initialIndex})
 {   
     function ClickTab(clickIndex)
     {
@@ -9,7 +9,7 @@ export default function Footer({OnClickEvent})
         OnClickEvent(clickIndex);
     }
 
-    const [index, setIndex] = React.useState(0);
+    const [index, setIndex] = React.useState(initialIndex ? initialIndex : 0);
 
 
     return(
