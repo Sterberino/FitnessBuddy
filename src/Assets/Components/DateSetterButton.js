@@ -52,7 +52,9 @@ export default function DateSetterButton()
                 className="title"
                 onClick={()=> {ToggleDatePicker()}}
                 style = {{
-                    cursor: "pointer"
+                    fontSize : "1.1em",
+                    cursor: "pointer",
+                    marginLeft: "0"
                 }}
             >{GetButtonText()}</div>
             {datepickerOpen && <div

@@ -53,7 +53,13 @@ export default function DiaryPage()
                     zIndex: "2"
                 }}
             >
-                <div className="row-flex">
+                <div 
+                    className="row-flex"
+                    style = {{
+                        marginTop: "20px",
+                        marginLeft: "0px"
+                    }}
+                >
                     <img 
                         src= {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`} 
                         className = "footer-button" 
