@@ -76,3 +76,42 @@
     text-align: left;
     font-size: 0.75em;
 }
+
+.search-item-add-button{
+    display: flex;
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    background-color: rgba(9, 16, 24, 1);
+    border-radius: 20px;
+    box-shadow: 0 2.5px 5px rgba(255, 255, 255, 0.10),
+                0 -2px 5px rgba(255, 255, 255, 0.05),
+                inset 0 0 2px rgba(0, 0, 0, 0.75);
+}
+
+.item-added-notification
+{
+    opacity: 0;
+    animation-name: Notify;
+    animation-duration: 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+@keyframes Notify{
+    0% {
+        opacity: 0;
+    }
+    25%{
+        opacity: 1;
+    }
+    75%
+    {
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+
+}

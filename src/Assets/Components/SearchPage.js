@@ -15,6 +15,25 @@ export default function SearchPage()
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
     const [searchInput, setSearchInput] = React.useState('')
     const [activeSearch, setActiveSearch] = React.useState('');
+    const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
+
+    React.useEffect(()=> {
+        let timeout = null;
+        if(recentlyAddedItem !== '')
+        {
+            let timeout = setTimeout(() => {
+                setRecentlyAddedItem('') 
+            }, 3000);
+        }
+        else{
+            let timeout = setTimeout(() => {}, 1);
+        }
+        
+
+        return(
+            clearTimeout(timeout)
+        )
+    }, [recentlyAddedItem])
 
     const navigate = useNavigate();
 
@@ -55,6 +74,84 @@ export default function SearchPage()
         )
     }
 
+    const AddItemToDiary = (item)=> {
+        console.log(item);
+        setRecentlyAddedItem(item)
+    }
+
+    const GetSearchResults = ()=> {
+        const SearchResults = [
+            {
+                name : "Cabbage, green, raw",
+                info : "28 cal, 1.0 cup, chopped"
+            },
+            {
+                name : "Cabbage, red, raw",
+                info : "28 cal, 1.0 cup, chopped"
+            }
+        ]
+
+        return SearchResults;
+    }
+
+    const GetHistory = ()=> {
+        const SearchResults = [
+            {
+                name : "Steak",
+                info : "190 cal, Round Steak, 4.0 oz"
+            },
+            {
+                name : "100% Whey Protein - Vanilla",
+                info : "130 cal, Muscle Milk, 1.0 Scoop"
+            }
+        ]
+
+        return SearchResults;
+    }
+
+    function GetSearchCards(input)
+    {
+        const divs = input.map((item, index) => {
+            return (
+                <div 
+                    className="displayCard"
+                    key = {index}
+                    style = {{
+                        padding: "5px"
+                    }}    
+                >
+                    <div className="row-flex">
+                        <div 
+                            className="column-flex"
+                            style={{
+                                alignItems: "left",
+                                justifyContent: "left"
+                            }}
+                        >
+                            <div className="title" style = {{textAlign: "left", marginLeft: 0, width: "100%"}}>{item.name}</div>
+                            <div className="nutrient-amount" style = {{textAlign: "left", marginLeft: 0, width: "100%"}}>{item.info}</div>
+                        </div>
+
+                        <div className="search-item-add-button">
+                            <img 
+                                className="cancel-search-icon" 
+                                src={`${process.env.PUBLIC_URL}/Images/Plus-Sign.png`}
+                                style = {{
+                                    left: "5px"
+                                }}
+                                onClick = {
+                                    () => {AddItemToDiary(item)}
+                                }
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+
+        return divs;
+    }
+
     return (
         <div
             style={{
@@ -86,7 +183,7 @@ export default function SearchPage()
                         className="blue-title"
                         style = {{
                             textAlign: "center",
-                            marginLeft : "-10px"
+                            marginLeft : "-20px"
                         }}
                     >{mealCategory}</div>
                     <div></div>
@@ -106,12 +203,27 @@ export default function SearchPage()
                 </div>
             </div>
             <div 
-                className="title"
+                className="row-flex"
                 style = {{
-                    fontSize: "1.1em"
+                    padding: "2px"
                 }}
-            >{`${activeSearch !== '' ? "Search Results" : "History"}`}</div>
-
+            >
+                <div 
+                    className="title"
+                    style = {{
+                        fontSize: "1.1em"
+                    }}
+                >{`${activeSearch !== '' ? "Search Results" : "History"}`}
+                </div>
+                {recentlyAddedItem !== '' && 
+                <div
+                    className="blue-title item-added-notification"
+                    style = {{pointerEvents: "none"}}
+                >{"Successfully Added Food!"}</div>}
+            </div>
+            
+            {activeSearch !== '' && GetSearchCards(GetSearchResults())}
+            {activeSearch === '' && GetSearchCards(GetHistory())}
             
         </div>
     )
