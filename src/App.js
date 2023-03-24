@@ -13,6 +13,7 @@ import Dashboard from './Assets/Components/Dashboard.js';
 import DiaryPage from './Assets/Components/DiaryPage.js';
 import Home from './Assets/Components/Home';
 import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
+import SearchPage from './Assets/Components/SearchPage';
 
 export const DateContext = React.createContext(null)
 
@@ -30,6 +31,7 @@ function App() {
             <Route exact path='/' element= {<Home initialPage={0}/>}></Route>
             <Route exact path='/Diary' element= {<Home initialPage={1}/>}></Route>
             <Route exact path='/Nutrition'  element= {<Home initialPage={2}/>}></Route>
+            <Route exact path='/Search'  element= {<SearchPage />}></Route>
           </Routes>
 
         </Router>

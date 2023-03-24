@@ -1,7 +1,11 @@
 import React from "react"
+import { useNavigate } from "react-router-dom";
+
 
 export default function DiaryItemCard({ItemTitle, style})
 {
+    const navigate = useNavigate();
+
     function GetDailyTotal()
     {
         return 0;
@@ -23,6 +27,7 @@ export default function DiaryItemCard({ItemTitle, style})
         const itemDivs = items.map((item, index) => {
             return (
                 <div 
+                    key = {index}
                     style = {{
                         width : "100%"
                     }}
@@ -74,7 +79,8 @@ export default function DiaryItemCard({ItemTitle, style})
                     className="blue-title"
                     style = {{
                         marginTop: "5px"
-                    }}  
+                    }}
+                    onClick = {()=>{navigate("../Search", {state:{name: ItemTitle}})}}  
                 >{`Add ${ItemTitle}`}</div>    
                 <div className="title">{" "}</div>
             </div> 
