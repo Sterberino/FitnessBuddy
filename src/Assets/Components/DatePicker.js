@@ -342,7 +342,7 @@ export default function DatePicker(props)
                         src = { inputMode ? `${process.env.PUBLIC_URL}/Images/Calendar-Icon.png` : `${process.env.PUBLIC_URL}/Images/edit-pen-icon.png`}
                         onClick = {()=> {
                             setInputErrorMessage('')
-                            setDateInput(`${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
+                            setDateInput(`${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate() < 10 ? "0" + currentDay.getDate() : currentDay.getDate()}/${currentDay.getFullYear()}`)
                             setInputMode(prev => !prev)
                         }}
                     />
