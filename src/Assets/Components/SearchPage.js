@@ -6,6 +6,7 @@ import '../Styles/searchPageStyles.css'
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { act } from "react-dom/test-utils";
+import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
 
 export default function SearchPage()
 {
@@ -13,9 +14,11 @@ export default function SearchPage()
     const initialMealCategory = (location.state ? location.state.name : null);
 
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
-    const [searchInput, setSearchInput] = React.useState('')
+    const [searchInput, setSearchInput] = React.useState('');
     const [activeSearch, setActiveSearch] = React.useState('');
     const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
+    const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
+
 
     React.useEffect(()=> {
         let timeout = null;
@@ -36,6 +39,14 @@ export default function SearchPage()
     }, [recentlyAddedItem])
 
     const navigate = useNavigate();
+
+    const TogglePopup = ()=> {
+        setChangeMealPopupOpen(prev => !prev);
+    } 
+
+    const ChangeMealCategory = (category)=> {
+        setMealCategory(category);
+    }
 
     const PerformSearch = (query)=>{
         if(query !== '')
@@ -75,7 +86,7 @@ export default function SearchPage()
     }
 
     const AddItemToDiary = (item)=> {
-        console.log(item);
+        console.log(`Clicked Add One Button with item: ${item.name} ${item.info}`);
         setRecentlyAddedItem(item)
     }
 
@@ -109,6 +120,15 @@ export default function SearchPage()
         return SearchResults;
     }
 
+    const OpenAddFoodPage = (food)=>{
+        navigate('Result', 
+            {state:{
+                mealCategory: mealCategory,
+                food: food
+            }})
+        console.log(food)
+    }
+
     function GetSearchCards(input)
     {
         const divs = input.map((item, index) => {
@@ -118,7 +138,8 @@ export default function SearchPage()
                     key = {index}
                     style = {{
                         padding: "5px"
-                    }}    
+                    }}
+                    onClick = {()=> { OpenAddFoodPage(item)}}
                 >
                     <div className="row-flex">
                         <div 
@@ -140,7 +161,10 @@ export default function SearchPage()
                                     left: "5px"
                                 }}
                                 onClick = {
-                                    () => {AddItemToDiary(item)}
+                                    (event) => {
+                                        event.stopPropagation();    
+                                        AddItemToDiary(item)
+                                    }
                                 }
                             />
                         </div>
@@ -185,6 +209,7 @@ export default function SearchPage()
                             textAlign: "center",
                             marginLeft : "-20px"
                         }}
+                        onClick = {()=> {TogglePopup()}}
                     >{mealCategory}</div>
                     <div></div>
                 </div>
@@ -224,7 +249,14 @@ export default function SearchPage()
             
             {activeSearch !== '' && GetSearchCards(GetSearchResults())}
             {activeSearch === '' && GetSearchCards(GetHistory())}
-            
+            {changeMealPopupOpen && 
+                <ChangeMealCategoryPopup 
+                    OnClickEvent={(category)=>{
+                        ChangeMealCategory(category)
+                        TogglePopup();
+                    }}
+                    OnExitEvent = {()=>{TogglePopup()}}
+                />} 
         </div>
     )
 

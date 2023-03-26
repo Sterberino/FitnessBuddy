@@ -3,7 +3,7 @@ import Barfill from "./donutChartBarfill.js"
 
 import '../Styles/donutChartStyles.css'
 
-export default function DonutChart({nutritionInformation, height, width})
+export default function DonutChart({nutritionInformation, height, width, style})
 {
     const [currentFill, setCurrentFill] = React.useState(nutritionInformation ? new Array(nutritionInformation.length).fill(0) : [0, 0, 0])
 
@@ -218,6 +218,7 @@ export default function DonutChart({nutritionInformation, height, width})
 
     return (
     <div className="donut-chart" style = {{
+        ...style,
         ...(height && {'height' : height}),
         ...(width && {'width' : height}),
     }}>

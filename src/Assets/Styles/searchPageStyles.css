@@ -88,6 +88,7 @@
     box-shadow: 0 2.5px 5px rgba(255, 255, 255, 0.10),
                 0 -2px 5px rgba(255, 255, 255, 0.05),
                 inset 0 0 2px rgba(0, 0, 0, 0.75);
+    z-index: 3;
 }
 
 .item-added-notification
@@ -113,5 +114,17 @@
     100%{
         opacity: 0;
     }
+}
+
+.displayCard.change-meal-category-popup{
+    width: 150px;
+    min-width: 100px;
+    height: 150px;
+    z-index: 11;
+    position: absolute;
+    overflow: hidden;
+    padding: 5px;
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
 
 }
