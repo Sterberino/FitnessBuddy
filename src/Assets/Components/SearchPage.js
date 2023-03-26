@@ -137,7 +137,8 @@ export default function SearchPage()
                     className="displayCard"
                     key = {index}
                     style = {{
-                        padding: "5px"
+                        padding: "5px",
+                        cursor : "pointer"
                     }}
                     onClick = {()=> { OpenAddFoodPage(item)}}
                 >
