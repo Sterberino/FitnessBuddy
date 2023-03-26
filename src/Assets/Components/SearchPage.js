@@ -121,12 +121,19 @@ export default function SearchPage()
     }
 
     const OpenAddFoodPage = (food)=>{
-        navigate('Result', 
-            {state:{
-                mealCategory: mealCategory,
-                food: food
-            }})
-        console.log(food)
+        navigate(
+            {
+                pathname: 'Result',
+                search: `id=${food.name}`,
+                
+            }, 
+            {
+                state:{
+                    mealCategory: mealCategory,
+                    food: food
+                    
+                }
+            })
     }
 
     function GetSearchCards(input)
