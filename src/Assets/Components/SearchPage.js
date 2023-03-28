@@ -5,8 +5,8 @@ import '../Styles/footerStyles.css'
 import '../Styles/searchPageStyles.css'
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { act } from "react-dom/test-utils";
 import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
+import Spinner from "./Spinner";
 
 export default function SearchPage()
 {
@@ -16,8 +16,35 @@ export default function SearchPage()
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
     const [searchInput, setSearchInput] = React.useState('');
     const [activeSearch, setActiveSearch] = React.useState('');
+    const [searchResponseData, setSearchResponseData] = React.useState({foods : []});
     const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
+
+
+    const SearchItems = ()=>{
+        fetch('../api/v1/search?' + new URLSearchParams({
+            foodName : activeSearch,
+        }))
+            .then(res => res.json())
+            .then(res => {
+                if(res.error)
+                {
+                    console.log(`Unable to perform API Request: ${res.error}`)
+                }
+                else{
+                    //console.log(res.payload)
+                    setSearchResponseData({foods : res.payload} )
+                }
+            })
+    }
+
+    React.useEffect(()=> {
+        if(activeSearch !== '')
+        {
+            SearchItems();
+        }
+        
+    },[activeSearch])
 
 
     React.useEffect(()=> {
@@ -91,16 +118,23 @@ export default function SearchPage()
     }
 
     const GetSearchResults = ()=> {
-        const SearchResults = [
-            {
-                name : "Cabbage, green, raw",
-                info : "28 cal, 1.0 cup, chopped"
-            },
-            {
-                name : "Cabbage, red, raw",
-                info : "28 cal, 1.0 cup, chopped"
-            }
-        ]
+        const SearchResults = searchResponseData.foods.map(item => {
+            return ({
+                name : item.name ? item.name.charAt(0).toUpperCase() + item.name.slice(1) : "Unknown Name",
+                calories : item.calories ? item.calories : 0,
+                serving_size_g : item.serving_size_g ? item.serving_size_g : "100",
+                fat_total_g: item.fat_total_g ? item.fat_total_g : 0,
+                fat_saturated_g: item.fat_saturated_g ? item.fat_saturated_g: 0,
+                protein_g: item.protein_g ? item.protein_g : 0,
+                sodium_mg: item.sodium_mg ? item.sodium_mg : 0,
+                potassium_mg: item.potassium_mg ? item.potassium_mg : 0,
+                cholesterol_mg: item.cholesterol_mg ? item.cholesterol_mg : 0,
+                carbohydrates_total_g: item.carbohydrates_total_g ? item.carbohydrates_total_g : 0,
+                fiber_g: item.fiber_g ? item.fiber_g : 0,
+                sugar_g: item.sugar_g ? item.sugar_g:  0,
+                info: `${Math.trunc(item.calories)} cal, ${(item.serving_size_g ? item.serving_size_g / 100 * 3.5274 : 3.5274).toFixed(2)}oz Serving`
+            })
+        })
 
         return SearchResults;
     }
@@ -131,7 +165,6 @@ export default function SearchPage()
                 state:{
                     mealCategory: mealCategory,
                     food: food
-                    
                 }
             })
     }
@@ -164,6 +197,7 @@ export default function SearchPage()
                         <div className="search-item-add-button">
                             <img 
                                 className="cancel-search-icon" 
+                                alt=""
                                 src={`${process.env.PUBLIC_URL}/Images/Plus-Sign.png`}
                                 style = {{
                                     left: "5px"
@@ -206,6 +240,7 @@ export default function SearchPage()
                     <img 
                         className="footer-button" 
                         src = {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`}
+                        alt=""
                         style = {{
                             margin: "0"
                         }}    
@@ -252,7 +287,7 @@ export default function SearchPage()
                 <div
                     className="blue-title item-added-notification"
                     style = {{pointerEvents: "none"}}
-                >{"Successfully Added Food!"}</div>}
+                >{`Successfully Added Food!`}</div>}
             </div>
             
             {activeSearch !== '' && GetSearchCards(GetSearchResults())}
@@ -265,6 +300,8 @@ export default function SearchPage()
                     }}
                     OnExitEvent = {()=>{TogglePopup()}}
                 />} 
+
+            <Spinner />
         </div>
     )
 

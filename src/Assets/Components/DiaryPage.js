@@ -10,7 +10,7 @@ import '../Styles/datepickerStyles.css'
 
 export default function DiaryPage()
 {
-    const {currentDate, setCurrentDate} = React.useContext(DateContext)
+    const { setCurrentDate} = React.useContext(DateContext)
     
     
     function NextDay()
@@ -62,12 +62,14 @@ export default function DiaryPage()
                 >
                     <img 
                         src= {`${process.env.PUBLIC_URL}/Images/Left-Arrow-Icon.png`} 
+                        alt=""
                         className = "footer-button" 
                         onClick={()=> { PreviousDay()}}
                     />
                     <DateSetterButton />
                     <img 
                         src= {`${process.env.PUBLIC_URL}/Images/Right-Arrow-Icon.png`} 
+                        alt=""
                         className = "footer-button" 
                         onClick={()=> {NextDay()}}
                     />
@@ -122,7 +124,6 @@ export default function DiaryPage()
                             className="nutrient-amount"
                             style = {{
                                 position: "absolute",
-                                top: 0,
                                 left: 0,
                                 right: 0,
                                 bottom: 0,

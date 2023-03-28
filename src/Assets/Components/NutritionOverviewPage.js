@@ -18,7 +18,6 @@ export default function NutritionOverviewPage()
     }
 
     window.scrollTo(0, 0);
-    const showMacros = true;
 
     return (
         <>

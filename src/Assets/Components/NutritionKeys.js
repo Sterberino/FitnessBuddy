@@ -143,11 +143,11 @@ export default function NutritionKeys()
     function GetFillPercentages()
     {
         return GetNutritionInfo().map(item => {
-            if(item.currentAmount === 0 && item.desiredAmount == 0)
+            if(item.currentAmount === 0 && item.desiredAmount === 0)
             {
                 return 0;
             }
-            else if(item.currentAmount > 0 && item.desiredAmount == 0)
+            else if(item.currentAmount > 0 && item.desiredAmount === 0)
             {
                 return 1;
             }
@@ -165,7 +165,7 @@ export default function NutritionKeys()
             let currentValues = currentFill;
             let fillPercentages = GetFillPercentages(); 
             
-            if(currentFill.length != fillPercentages.length)
+            if(currentFill.length !== fillPercentages.length)
             {
                 console.log(`currentValues undefined, length ${currentValues.length}`)
                 let length = fillPercentages.length

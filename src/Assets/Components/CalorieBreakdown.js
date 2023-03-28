@@ -23,11 +23,6 @@ export default function CalorieBreakdown()
         }
     ]
 
-    function GetPercentages()
-    {
-        const percentages = [0.25, 0.35, 0.15, 0.25]
-        return percentages;
-    }
 
     function GetCalorieAmounts()
     {

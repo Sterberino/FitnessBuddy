@@ -3,11 +3,9 @@ import '../Styles/bodyStyles.css'
 import '../Styles/nutritionPageStyles.css'
 import '../Styles/lineChartStyles.css'
 
-import DonutChart from './donutChart.js'
 import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
-import DateSetterButton from "./DateSetterButton.js";
 
 export default function Dashboard()
 {

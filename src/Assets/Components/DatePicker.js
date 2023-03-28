@@ -46,7 +46,7 @@ export default function DatePicker(props)
         let validInput = true;
         //Check for valid format(does it match mm/dd/yyyy ?)
         let datesInput = dateInput.split('/')
-        if(datesInput.length != 3 || datesInput[0].length != 2 || datesInput[1].length != 2 || datesInput[2].length != 4)
+        if(datesInput.length !== 3 || datesInput[0].length !== 2 || datesInput[1].length !== 2 || datesInput[2].length !== 4)
         {
             setInputErrorMessage(`Invalid Format.\nUse mm/dd/yyyy.\nExample: ${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
             validInput = false;
@@ -60,7 +60,6 @@ export default function DatePicker(props)
         datesInputAsNumbers.forEach(item => {
             if(isNaN(item))
             {
-                let d = new Date();
                 validInput = false;
                 setInputErrorMessage(`Invalid Format.\nUse mm/dd/yyyy.\nExample: ${currentDay.getMonth() < 9 ? '0' : ''}${currentDay.getMonth() + 1}/${currentDay.getDate()}/${currentDay.getFullYear()}`)
                 return;
@@ -100,48 +99,7 @@ export default function DatePicker(props)
             setCurrentDay(new Date(datesInputAsNumbers[2] , datesInputAsNumbers[0] - 1, datesInputAsNumbers[1]))
         }
     }
-
-    const InputIsValid = ()=> {
-        //Check for valid format(does it match mm/dd/yyyy ?)
-        let datesInput = dateInput.split('/')
-        if(datesInput.length != 3 || datesInput[0].length != 2 || datesInput[1].length != 2 || datesInput[2].length != 4)
-        {
-            return false;
-        }
-        
-        let datesInputAsNumbers = datesInput.map(item => {
-            return Number(item)
-        })
-        
-        datesInputAsNumbers.forEach(item => {
-            if(isNaN(item))
-            {
-                let d = new Date();
-                return false;
-            }
-        })
-
-        //Check for numbers out of range of our selectable dates
-        if(datesInputAsNumbers[0] < 1 || datesInputAsNumbers[0] > 12)
-        {
-            return false;
-        }
-
-        let year = new Date().getFullYear();
-        if(datesInputAsNumbers[2] > year + 99 || datesInputAsNumbers[2] < year - 100)
-        {
-            return false;
-        }
-
-        let daysInMonth = GetDaysInMonth(datesInput[2], datesInputAsNumbers[0] - 1);
-        if(datesInputAsNumbers[1] < 1 || datesInputAsNumbers[1] > daysInMonth)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
+    
     React.useEffect(()=>{
         let interval = null;
         HandleInput();

@@ -214,8 +214,6 @@ export default function DonutChart({nutritionInformation, height, width, style})
     }, [currentFill])
     //const Percentages = GetFillPercentages();
 
-    const numValues = 3;
-
     return (
     <div className="donut-chart" style = {{
         ...style,
