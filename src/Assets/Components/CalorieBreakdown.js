@@ -1,7 +1,7 @@
 import React from "react";
 import '../Styles/nutritionPageStyles.css'
 
-
+//Gets calories consumed on the current selected day, broken down by which meal is associated with the entry.
 export default function CalorieBreakdown()
 {
     const colors = [
@@ -28,7 +28,6 @@ export default function CalorieBreakdown()
     {
         return [250, 350, 150, 250]
     }
-
 
     return(
         <>

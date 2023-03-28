@@ -22,8 +22,8 @@ function App() {
   
   const [currentDate, setCurrentDate] = React.useState(new Date())
 
- 
-
+  //We want to provide the current selected date to the entire app so that we can retrieve information for that corresponding day on multiple pages.
+  //We use React Router so that we can navigate from the food lookup / entry page back to the diary page.
   return (
     <DateContext.Provider value = {{currentDate : currentDate, setCurrentDate : setCurrentDate}}>
         <Router>

@@ -18,23 +18,26 @@ export default function AddFoodPage()
     
     const navigate = useNavigate()
 
+    //Opens a popup for Changing the day that you want to associate the entry with (Breakfast, Lunch, Dinner, or Snacks)
     const TogglePopup = ()=>{
         setChangeMealPopupOpen(prev => !prev)
     }
 
-
+    //Get the percentages for Carbs, Fat, Protein to display on the Food page.
     function GetFoodBreakdown()
     {
         const percentages = [0.35, 0.15, 0.5]
         return percentages;
     }
 
+    //Gets the total values for Carbs, Fat, and Protein to display on the page.
     function GetMacros()
     {
         const macros = [100, 50, 300];
         return macros;
     }
 
+    //Gets all of the more detailed nutrition information available for the food.
     function GetFullNutritionInfo()
     {
         const NutritionInfo = [
@@ -127,6 +130,7 @@ export default function AddFoodPage()
         return NutritionInfo;
     }
 
+    //Takes the information from the from GetFullNutritionInfo() function and converts it to a list of divs to display on the page
     function GetFullNutritionInfoDivs()
     {
         const nutrientinfo = GetFullNutritionInfo();
@@ -157,6 +161,7 @@ export default function AddFoodPage()
         return divs;
     }
 
+    //We're going to get the relevant information and assign it to variables to avoid multiple function calls per render. 
     const percentages = GetFoodBreakdown();
     const foodMacros = GetMacros();
 

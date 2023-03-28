@@ -4,6 +4,7 @@ import '../Styles/bodyStyles.css'
 import '../Styles/searchPageStyles.css'
 import '../Styles/nutritionPageStyles.css'
 
+//A small popup component that allows you to change the meal associated with an entry.
 export default function ChangeMealCategoryPopup({OnClickEvent, OnExitEvent})
 {
     const categories = ["Breakfast", "Lunch", "Dinner", "Snacks"]

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+//A user with a username, email, and password. email regex taken from Stackoverflow
 const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -28,12 +29,14 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
+//Encrypts the password before saving so that the password is not saved directly in the database as a string.
 UserSchema.pre('save', async function(next)
 {
     const salt = bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 })
 
+//A method to create a JWT for a user upon login or registration.
 UserSchema.methods.CreateJWT = function()
 {
     return jwt.sign(
@@ -48,6 +51,7 @@ UserSchema.methods.CreateJWT = function()
     );
 }
 
+//Compare the password to the existing user's password for login, using bcrypt
 UserSchema.methods.ComparePassword = async function(password)
 {
     const match = await bcrypt.compare(password, this.password);

@@ -3,7 +3,8 @@ import Chart from "react-apexcharts";
 import "../Styles/lineChartStyles.css"
 import "../Styles/nutritionPageStyles.css"
 
-
+//This component creates an aesthetic line chart using information passed in as props.
+//Created using Apex Charts. docs: https://apexcharts.com/docs/options/
 class AreaChart extends Component {
   constructor(props) {
     super(props);
@@ -131,10 +132,6 @@ class AreaChart extends Component {
               type="area"
             />
         </div>
-          
-            
-            
-    
     );
   }
 }

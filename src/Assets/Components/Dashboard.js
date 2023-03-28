@@ -15,7 +15,9 @@ export default function Dashboard()
         return name;
     }
 
-
+    /*We return 3 main things on the Dashboard page: A welcome message to the user, an overview of today's
+    Calories and Macros, and a view of the user's weight over some period of time. We need to retrieve this 
+    information and provide it to those components.*/
     return (
         <div>
             <div className="title"

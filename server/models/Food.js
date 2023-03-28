@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+//This schema maps to the information retrieved from the Calorie Ninjas API,
+//with the addition of a user associated with the entry
 const FoodEntrySchema = new mongoose.Schema({
     name: {
         type: String,
@@ -49,6 +51,11 @@ const FoodEntrySchema = new mongoose.Schema({
     sugar_g: {
         type: Number,
         default: 0
+    },
+    Meal : {
+        type: String,
+        enum: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
+        required: [true, "Please provide a meal associated with the food entry."]
     },
     createdBy : {
         type: mongoose.Types.ObjectId,

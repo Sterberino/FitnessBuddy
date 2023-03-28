@@ -14,9 +14,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Home({initialPage})
 {
+    //We have 3 tabs to navigate to the 3 main pages of the webapp
     const [footerTabState, setFooterTabState] = React.useState(initialPage ? initialPage : 0);
     const navigate = useNavigate();
 
+    //On clicking the footer tab, we scroll back to the top of the page (so we aren't viewing the new page halfway down).
+    //Then, we set the index equal to what is passed to us from the tab button and navigate to the appropriate page.
     function OnClickFooterTab(index)
     {
       window.scrollTo(0, 0);
@@ -37,6 +40,7 @@ export default function Home({initialPage})
       }
     }
   
+    //Scroll up on load.
     window.scrollTo(0, 0);
 
     return (
