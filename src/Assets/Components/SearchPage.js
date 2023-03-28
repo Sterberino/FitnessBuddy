@@ -190,7 +190,7 @@ export default function SearchPage()
                                 justifyContent: "left"
                             }}
                         >
-                            <div className="title" style = {{textAlign: "left", marginLeft: 0, width: "100%"}}>{item.name}</div>
+                            <div className="title" style = {{textAlign: "left", marginLeft: 0, width: "100%", marginTop: "-5px"}}>{item.name}</div>
                             <div className="nutrient-amount" style = {{textAlign: "left", marginLeft: 0, width: "100%"}}>{item.info}</div>
                         </div>
 

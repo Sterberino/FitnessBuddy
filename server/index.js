@@ -28,20 +28,20 @@ app.get('/api/v1/search', async (req, res)=>{
                     API_Response = {
                         error : "Something Went Wrong"
                     }
-                    return res.status(400).json(API_Response).send();
+                    return res.status(400).json(API_Response);
                 }
                 else if(response.statusCode != 200)
                 {
                     API_Response = {
                         error : "Something Went Wrong"
                     }
-                    return res.status(400).json(API_Response).send(); 
+                    return res.status(400).json(API_Response); 
                 }
                 else{
                     API_Response = {
                         payload: JSON.parse(response.body).items
                     }
-                    return res.status(200).json(API_Response).send();
+                    return res.status(200).json(API_Response);
                 }
             })
         }catch(err)
@@ -50,7 +50,7 @@ app.get('/api/v1/search', async (req, res)=>{
             API_Response = {
                 error : "No Query Provided"
             }
-            return res.status(400).json(API_Response).send(); 
+            return res.status(400).json(API_Response); 
         }
        
     }
@@ -58,7 +58,7 @@ app.get('/api/v1/search', async (req, res)=>{
         API_Response = {
             error : "No Query Provided"
         }
-        return res.status(400).json(API_Response).send(); 
+        return res.status(400).json(API_Response); 
     }
 })
 
