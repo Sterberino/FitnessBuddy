@@ -4,7 +4,7 @@ const CustomAPIError = require('../errors/CustomApiError.js');
 const {StatusCodes} = require('http-status-codes')
 
 //Middleware for validating authentication when retrieving data.
-const auth = async (req, res, next)=> {
+const Authenticate = async (req, res, next)=> {
     //The request header should have an authorization field equal to 'Bearer [Json Token]'
     const authHeader = req.headers.authorization;
 
@@ -31,3 +31,5 @@ const auth = async (req, res, next)=> {
         throw new CustomAPIError('Invalid Authentication.', StatusCodes.UNAUTHORIZED)
     }
 }
+
+module.exports = Authenticate;

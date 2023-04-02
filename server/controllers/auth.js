@@ -1,5 +1,6 @@
 const User = require('../models/User.js')
 const {StatusCodes} = require('http-status-codes')
+const CustomAPIError = require('../errors/CustomApiError.js')
 
 //Create a user and issue a JWT token
 const Register = async(req, res) => {
@@ -17,20 +18,20 @@ const Login = async(req, res) => {
 
     if(!email || !password)
     {
-        throw new Error();
+        throw new CustomAPIError('Please provide and email and a password', StatusCodes.BAD_REQUEST);
     }
 
     const user = await User.findOne({email})
 
     if(!user)
     {
-        throw new Error();
+        throw new CustomAPIError(`No user found with email ${email}`, StatusCodes.NOT_FOUND);
     }
 
     const correctPassword = await user.ComparePassword(password);
     if(!correctPassword)
     {
-        throw new Error();
+        throw new CustomAPIError('Incorrect Email or Password', StatusCodes.UNAUTHORIZED)
     }
 
     const token = user.CreateJWT();
