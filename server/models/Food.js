@@ -52,10 +52,18 @@ const FoodEntrySchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    Servings: {
+        type: Number,
+        required: [true, 'Please provide the number of servings.']
+    },
     Meal : {
         type: String,
         enum: ['Breakfast', 'Lunch', 'Dinner', 'Snacks'],
         required: [true, "Please provide a meal associated with the food entry."]
+    },
+    DiaryDate: {
+        type: Date,
+        reuired: [true, 'Please provide the date that the food was added to the diary.']
     },
     createdBy : {
         type: mongoose.Types.ObjectId,
