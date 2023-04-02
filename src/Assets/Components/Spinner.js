@@ -1,13 +1,16 @@
 import React from "react";
 import '../Styles/spinnerStyles.css'
 
-export default function Spinner()
+export default function Spinner({style})
 {
+    
+
     return (
         <div 
             className="lds-spinner"
             style= {{
-                transform: "scale(0.3)"
+                ...style,
+                transform: "scale(0.3)",
             }}
         >
             <div></div>

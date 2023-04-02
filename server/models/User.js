@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: [true, 'Please provide a username.'],
-        minLength: 8,
+        minLength: 4,
         maxLength: 30,
         unique: true
     },
@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
 //Encrypts the password before saving so that the password is not saved directly in the database as a string.
 UserSchema.pre('save', async function(next)
 {
-    const salt = bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
 })
 

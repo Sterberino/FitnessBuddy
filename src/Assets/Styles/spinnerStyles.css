@@ -1,6 +1,6 @@
 .lds-spinner {
     color: official;
-    display: inline-block;
+    display: flex;
     position: relative;
     width: 80px;
     height: 80px;
@@ -20,6 +20,7 @@
     border-radius: 20%;
     background: #fff;
   }
+
   .lds-spinner div:nth-child(1) {
     transform: rotate(0deg);
     animation-delay: -1.1s;

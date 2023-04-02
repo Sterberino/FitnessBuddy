@@ -19,10 +19,12 @@ export default function SearchPage()
     const [searchResponseData, setSearchResponseData] = React.useState({foods : []});
     const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
-
+    const [SpinnerActive, setSpinnerActive] = React.useState(false)
 
     const SearchItems = ()=>{
-        fetch('../api/v1/search?' + new URLSearchParams({
+        setSpinnerActive(true);
+        setSearchResponseData({foods : []})
+        fetch('../api/v1/search/food?' + new URLSearchParams({
             foodName : activeSearch,
         }))
             .then(res => res.json())
@@ -35,6 +37,7 @@ export default function SearchPage()
                     //console.log(res.payload)
                     setSearchResponseData({foods : res.payload} )
                 }
+                setSpinnerActive(false)
             })
     }
 
@@ -301,7 +304,11 @@ export default function SearchPage()
                     OnExitEvent = {()=>{TogglePopup()}}
                 />} 
 
-            <Spinner />
+            {SpinnerActive &&  <Spinner style = {{
+                alignSelf: 'center',
+                //50% of container width - half of the width of the spinner
+                left: 'calc(50% - 40px)'
+            }}/>}
         </div>
     )
 
