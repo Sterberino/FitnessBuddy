@@ -37,18 +37,16 @@ UserSchema.pre('save', async function(next)
 })
 
 //A method to create a JWT for a user upon login or registration.
-UserSchema.methods.CreateJWT = function()
-{
+UserSchema.methods.CreateJWT = function(){
     return jwt.sign(
         {
-            userId: this._id,
-            name: this.name
-        },
+            userId: this._id, 
+            name: this.userName
+        }, 
         process.env.JWT_SECRET,
         {
             expiresIn: process.env.JWT_LIFETIME
-        }
-    );
+        });
 }
 
 //Compare the password to the existing user's password for login, using bcrypt

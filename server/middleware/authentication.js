@@ -9,7 +9,7 @@ const Authenticate = async (req, res, next)=> {
     const authHeader = req.headers.authorization;
 
     //If we don't see the header field or the field does not start with Bearer, we know there isn't a valid Token
-    if(!authHeader || !authHeader.StartsWith('Bearer '))
+    if(!authHeader || !authHeader.startsWith('Bearer '))
     {
         throw new CustomAPIError('Invalid Authentication.', StatusCodes.UNAUTHORIZED)
     }
@@ -20,9 +20,10 @@ const Authenticate = async (req, res, next)=> {
     //Try to verify it and then call next. Throw an error if the authorization validation fails
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
-        req.User = {
+        
+        req.user = {
             userId: payload.userId,
-            name: payload.name
+            name: payload.userName
         };
         next();
     }

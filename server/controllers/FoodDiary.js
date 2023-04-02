@@ -7,13 +7,26 @@ const CustomAPIError = require('../errors/CustomApiError.js')
 const CreateEntry = async (req, res) => {
     req.body.createdBy = req.user.userId;
     const foodEntry = await Food.create(req.body);
+
+    res.status(StatusCodes.CREATED).json({foodEntry})
 }
 
 //Get all of the entries in a given day for the current user.
 const ReadAllEntries = async (req, res)=> {
+    if(!req.body.DiaryDate)
+    {
+        throw new CustomAPIError('A date must be provided for food diary queries.', StatusCodes.BAD_REQUEST);
+    }
+
+    const date = new Date(req.body.DiaryDate);
+
+    //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
     const foods = await Food.find({
         createdBy: req.user.userId,
-        DiaryDate: req.body.DiaryDate
+        DiaryDate: {
+            $gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+            $lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+        }
     }).sort('createdAt');
 
     res

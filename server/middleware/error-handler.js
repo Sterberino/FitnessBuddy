@@ -8,7 +8,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || 'Something went wrong. try again later.'
   }
   
-  console.log(customError)
+
 
   if(err.name === 'ValidationError')
   {
@@ -29,7 +29,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.msg = `Duplicate value entered for ${Object.keys(err.keyValue)} field, please choose another value.`
     customError.statusCode = 400;
   }
-
+  console.log(customError)
   return res.status(customError.statusCode).json({ msg : customError.msg })
 }
 
