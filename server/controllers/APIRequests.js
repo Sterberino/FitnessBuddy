@@ -1,5 +1,7 @@
 const express = require('express')
 const request = require('request')
+const Exercise = require('../models/Exercise.js')
+const {StatusCodes} = require('http-status-codes')
 
 const FoodSearch = async (req, res)=>{
     const query = req.query;
@@ -57,6 +59,60 @@ const FoodSearch = async (req, res)=>{
     }
 }
 
+/*We WERE going to use API-Ninjas Calories burned API, but it looks like they are somehow
+missing entries that they say they have (https://api.api-ninjas.com/v1/caloriesburnedactivities gives a full list of
+activities, but when you search an activity listed in their database using
+https://api.api-ninjas.com/v1/caloriesburned?activity=activityName, it doesn't come up). SO, I found where they likely
+sourced their data from and copied it all into my own database. 
+
+Data Entries Source: 
+Barbara E. Ainsworth, et al., “2011 Compendium of Physical Activities: A Second Update of Codes and MET Values,” Medicine and Science in Sports and Exercise, Aug. 2011*/
+const ExerciseSearch = async (req, res)=>{
+    const query = req.query;
+    const exerciseName = query ? req.query.exerciseName : null;
+    //duration in minutes. 60 by default.
+    const duration = query ? req.query.duration : 60;
+    const weight = query ? req.query.weight : 160
+
+    if(!duration || duration < 1)
+    {
+        return res.status(StatusCodes.BAD_REQUEST).send('Please provide a valid exercise duration');
+    }
+
+    if(!weight || weight < 1)
+    {
+        return res.status(StatusCodes.BAD_REQUEST).send('Please provide a valid user weight');
+    }
+
+    if(!exerciseName)
+    {
+        return res.status(StatusCodes.BAD_REQUEST).send('Please provide a valid exercise name');
+    }
+    
+    var API_Response = {
+        payload: []
+    };
+
+    const exercises = await Exercise.find({ 
+        "exerciseName": { 
+            "$regex": exerciseName, 
+            "$options": "i" 
+        } 
+    }).limit(20).exec();
+
+    const exerciseResponse = exercises.map(item => {
+        return {
+            exerciseName : item.exerciseName,
+            category: item.category,
+            //(0.45kg / lb) * user weight * MET  = cal/hr. (cal/hr) / 60 = cal/min * duration in minutes is total burned cals
+            calories: 0.453592 * weight * item.met / 60 * duration 
+        }
+    })
+    API_Response.payload = exerciseResponse;
+    res.status(StatusCodes.OK).json(API_Response);
+}
+
 module.exports = {
-    FoodSearch
+    FoodSearch,
+    ExerciseSearch
 }

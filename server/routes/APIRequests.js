@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const {FoodSearch} = require('../controllers/APIRequests.js');
+const {FoodSearch, ExerciseSearch} = require('../controllers/APIRequests.js');
 
-router.route('/Food').get(FoodSearch)
+router.route('/food').get(FoodSearch)
+router.route('/exercise').get(ExerciseSearch)
 
 module.exports = router;

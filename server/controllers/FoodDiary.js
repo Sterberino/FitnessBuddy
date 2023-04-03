@@ -84,7 +84,7 @@ const UpdateEntry = async (req, res) => {
         name: name,
         Servings: Servings,
         Meal: Meal,
-        DiaryDate: DiaryDate
+        DiaryDate: new Date(DiaryDate)
     }
 
     //Check the object (not entirely necessary)
@@ -103,9 +103,9 @@ const UpdateEntry = async (req, res) => {
         createdBy: userId
     },
     {$set: {...fieldsToUpdate}},
-    {new: false, runValidators: true})
+    {new: true, runValidators: true})
 
-    res.status(StatusCodes.Ok).json({foodEntry})
+    res.status(StatusCodes.OK).json({foodEntry})
 } 
 
 //Delete a food item from the daily diary
