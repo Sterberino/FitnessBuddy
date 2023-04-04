@@ -11,12 +11,14 @@ const app = express();
 app.use(express.json());
 
 //Routers
+const ExerciseDiaryRouter = require('./routes/ExerciseDiary.js');
 const FoodDiaryRouter = require('./routes/FoodDiary.js');
 const APIRequestRouter = require('./routes/APIRequests.js');
 const AuthenticationRouter = require('./routes/auth.js');
 app.use('/api/v1/search', APIRequestRouter);
 app.use('/api/v1/auth', AuthenticationRouter);
 app.use('/api/v1/foodDiary', authenticationMiddleware, FoodDiaryRouter);
+app.use('/api/v1/exerciseDiary', authenticationMiddleware, ExerciseDiaryRouter);
 
 //Middleware
 app.use(errorHandlerMiddleware);

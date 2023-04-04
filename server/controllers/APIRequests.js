@@ -72,7 +72,10 @@ const ExerciseSearch = async (req, res)=>{
     const exerciseName = query ? req.query.exerciseName : null;
     //duration in minutes. 60 by default.
     const duration = query ? req.query.duration : 60;
+    //User weight in lbs. 160 by default.
     const weight = query ? req.query.weight : 160
+
+
 
     if(!duration || duration < 1)
     {
@@ -100,10 +103,15 @@ const ExerciseSearch = async (req, res)=>{
         } 
     }).limit(20).exec();
 
+    //When returning the exercise data to the user, we want to return the MET along with the queries. 
+    //We do this so we can modify an entry at a later time.
     const exerciseResponse = exercises.map(item => {
         return {
             exerciseName : item.exerciseName,
             category: item.category,
+            met: item.met,
+            weightDuringExercise: weight,
+            exerciseDuration: duration,
             //(0.45kg / lb) * user weight * MET  = cal/hr. (cal/hr) / 60 = cal/min * duration in minutes is total burned cals
             calories: 0.453592 * weight * item.met / 60 * duration 
         }
