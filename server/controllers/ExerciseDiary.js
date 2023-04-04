@@ -79,7 +79,7 @@ const UpdateEntry = async (req, res) => {
     if(!met || !DiaryDate || !weightDuringExercise || !exerciseDuration)
     {
         throw new CustomAPIError(
-            'One of the necessarily provided fields is missing. Please provide Name, Servings, Meal, DiaryDate',
+            'One of the necessarily provided fields is missing. Please provide met, weightDuringExercise, exerciseDuration, and DiaryDate',
             StatusCodes.BAD_REQUEST);
     }
 

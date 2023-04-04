@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const WeightEntrySchema = new mongoose.Schema({
-    Weight: {
+    userWeight: {
         type: Number,
         required: [true, 'Please provide your weight in lbs'] 
     },
