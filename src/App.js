@@ -7,20 +7,22 @@ import './Assets/Components/NutritionOverviewPage.js'
 
 
 import './Assets/Styles/footerStyles.css'
-import NutritionOverviewPage from './Assets/Components/NutritionOverviewPage.js';
-import Footer from './Assets/Components/Footer.js';
-import Dashboard from './Assets/Components/Dashboard.js';
-import DiaryPage from './Assets/Components/DiaryPage.js';
 import Home from './Assets/Components/Home';
-import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router, useNavigate, Navigate } from 'react-router-dom';
 import SearchPage from './Assets/Components/SearchPage';
 import AddFoodPage from './Assets/Components/AddFoodPage';
+import Login from './Assets/Components/Login.js';
 
 export const DateContext = React.createContext(null)
 
 function App() {
   
   const [currentDate, setCurrentDate] = React.useState(new Date())
+
+  function IsLoggedIn()
+  {
+    return false;
+  }
 
   //We want to provide the current selected date to the entire app so that we can retrieve information for that corresponding day on multiple pages.
   //We use React Router so that we can navigate from the food lookup / entry page back to the diary page.
@@ -29,11 +31,12 @@ function App() {
         <Router>
     
           <Routes>
-            <Route exact path='/' element= {<Home initialPage={0}/>}></Route>
-            <Route exact path='/Diary' element= {<Home initialPage={1}/>}></Route>
-            <Route exact path='/Nutrition'  element= {<Home initialPage={2}/>}></Route>
-            <Route exact path='/Search'  element= {<SearchPage />}></Route>
-            <Route exact path = 'Search/Result' element = {<AddFoodPage />}></Route>
+            <Route exact path= {'/'} element= {IsLoggedIn() ? <Home initialPage={0}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path='/Diary' element= {IsLoggedIn() ? <Home initialPage={1}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path='/Nutrition'  element= {IsLoggedIn() ? <Home initialPage={2}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path='/Search'  element= {IsLoggedIn() ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = 'Search/Result' element = {IsLoggedIn() ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = '/login' element = {IsLoggedIn() ? <Navigate to = "/" replace /> : <Login />} />
           </Routes>
 
         </Router>
