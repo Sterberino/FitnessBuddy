@@ -115,7 +115,7 @@ const DeleteEntry = async (req, res) => {
 
     if(!weightEntry)
     {
-        throw new CustomAPIError(`No food entry found with ID ${weightEntryId}`, StatusCodes.NOT_FOUND)
+        throw new CustomAPIError(`No weight entry found with ID ${weightEntryId}`, StatusCodes.NOT_FOUND)
     }
     console.log(weightEntryId);
     res.status(StatusCodes.OK).send('Weight entry was successfully removed');
