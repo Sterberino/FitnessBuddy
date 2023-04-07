@@ -186,7 +186,7 @@ export default function Login()
                 <div className="field">
                 <input 
                     className= {emailInput === '' ? 'empty': 'not-empty'}
-                
+                    
                     autoComplete="off"
                     autoFocus = {false}
                     id = "email-text-input"

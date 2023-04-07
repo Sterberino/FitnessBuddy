@@ -75,7 +75,7 @@ function App() {
         <Router>
     
           <Routes>
-            <Route exact path= {'/'} element= {IsLoggedIn() ? <Home initialPage={0}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path= {'/'} element= {IsLoggedIn() ? <Home initialPage={0}/> : <Navigate to = "/login" />}></Route>
             <Route exact path='/Diary' element= {IsLoggedIn() ? <Home initialPage={1}/> : <Navigate to = "/login" replace />}></Route>
             <Route exact path='/Nutrition'  element= {IsLoggedIn() ? <Home initialPage={2}/> : <Navigate to = "/login" replace />}></Route>
             <Route exact path='/Search'  element= {IsLoggedIn() ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>

@@ -14,6 +14,9 @@
     height: 45px;
 }
 
+.login-input-form input:-webkit-autofill {
+  background:rgba(0, 0, 0, 0.2);
+}
 
 .login-input-form input[type=text], input[type=password] {
     position: relative;
