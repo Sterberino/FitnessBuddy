@@ -24,6 +24,9 @@ app.use('/api/v1/exerciseDiary', authenticationMiddleware, ExerciseDiaryRouter);
 app.use('/api/v1/weightDiary', authenticationMiddleware, WeightDiaryRouter);
 app.use('/api/v1/waterDiary', authenticationMiddleware, WaterDiaryRouter)
 
+//Instead of using authentication function as middleware, we simply make a request for verification.
+app.get('/api/v1/verifyAuthentication', authenticationMiddleware);
+
 //Middleware
 app.use(errorHandlerMiddleware);
 

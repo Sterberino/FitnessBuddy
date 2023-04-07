@@ -21,8 +21,16 @@ function App() {
 
   function IsLoggedIn()
   {
+    const token = localStorage.getItem('token');
+    /*if(token)
+    {
+      console.log(token)
+      return true;
+    }*/
     return false;
   }
+
+
 
   //We want to provide the current selected date to the entire app so that we can retrieve information for that corresponding day on multiple pages.
   //We use React Router so that we can navigate from the food lookup / entry page back to the diary page.

@@ -168,7 +168,7 @@ TODO
 }
 
 .blue-title{
-    color: rgba(0,0,0,0);
+    color: rgba(0,0,0,0) !important;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 500;
     font-size: 0.8em;
@@ -180,6 +180,7 @@ TODO
     background-repeat: no-repeat;
     background-size: contain;
 
+
     transition: all 0.15s ease-in-out;
 }
 
@@ -188,3 +189,4 @@ TODO
     filter: brightness(1.1);
     cursor: pointer;
 }
+
