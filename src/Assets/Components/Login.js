@@ -76,8 +76,14 @@ export default function Login()
                     const token = res.token;
                     if(token)
                     {
-                        localStorage.setItem('token', res.token)     
+                        localStorage.setItem('token', res.token)
                     }                   
+                })
+                .then(res=> {
+                    if(localStorage.getItem('token'))
+                    {
+                        navigate(0)
+                    }          
                 })
                 .catch(err => {
                     setInputErrorMessage('\nInvalid Credentials');
@@ -120,6 +126,12 @@ export default function Login()
                     localStorage.setItem('token', res.token)
                 }            
             })
+            .then(res=> {
+                if(localStorage.getItem('token'))
+                {
+                    navigate(0)
+                }          
+            })
             .catch(err => {
                 setInputErrorMessage('\nInvalid Credentials');
                 setLoginRequest({
@@ -154,7 +166,6 @@ export default function Login()
 
     function LoginForm()
     {
-        
         return (
             <div>
                 <div 
@@ -168,8 +179,12 @@ export default function Login()
                 <form 
                     onSubmit={(event)=> {
                         event.preventDefault()
-                        setInputErrorMessage(prev => prev.includes('Invalid Crendentials') ? prev: '');
-                        
+
+                        if(!inputErrorMessage.includes('Invalid Crendentials'))
+                        {
+                            setInputErrorMessage('');
+                        }
+                             
                         let canSend = true;
                         if(emailInput === '')
                         {
@@ -184,6 +199,7 @@ export default function Login()
 
                         if(canSend)
                         {
+                            console.log('CAN SEND')
                             setLoginRequest({
                                 email: emailInput,
                                 password: passwordInput,
@@ -197,7 +213,7 @@ export default function Login()
                 <input 
                     className= {emailInput === '' ? 'empty': 'not-empty'}
                     
-                    autoComplete="off"
+                    autoComplete = "new-password"
                     autoFocus = {false}
                     id = "email-text-input"
                     type="text" 
@@ -223,7 +239,7 @@ export default function Login()
                         style = {{
                             marginBottom : inputErrorMessage === '' ? '20px' : '0'
                         }}
-                        autoComplete="off"
+                        autoComplete = "new-password"
                         autoFocus = {false}
                         id = "password-text-input"
                         type= {showPassword ? "text" : "password"} 
@@ -334,7 +350,7 @@ export default function Login()
                         <input 
                             className= {emailInput === '' ? 'empty': 'not-empty'}
                  
-                            autoComplete="off"
+                            autoComplete = "new-password"
                             autoFocus = {false}
                             id = "email-text-input"
                             type="text" 
@@ -352,7 +368,7 @@ export default function Login()
                     <div className="field">
                         <input 
                             className= {usernameInput === '' ? 'empty': 'not-empty'}
-                            autoComplete="off"
+                            autoComplete = "new-password"
                             autoFocus = {false}
                             id = "username-text-input"
                             type="text" 
@@ -378,7 +394,7 @@ export default function Login()
                         style = {{
                             marginBottom : (inputErrorMessage === '' ? '20px' : '0px')
                         }}
-                        autoComplete="off"
+                        autoComplete = "new-password"
                         autoFocus = {false}
                         id = "password-text-input"
                         type= {showPassword ? "text" : "password"} 
@@ -445,7 +461,8 @@ export default function Login()
 
     if(localStorage.getItem('token'))
     {
-        navigate(0)
+        console.log('Navigating to dash')
+        navigate(0);
     }
 
     return (
