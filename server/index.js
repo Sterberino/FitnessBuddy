@@ -17,6 +17,7 @@ const APIRequestRouter = require('./routes/APIRequests.js');
 const AuthenticationRouter = require('./routes/auth.js');
 const WeightDiaryRouter = require('./routes/WeightDiary.js');
 const WaterDiaryRouter = require('./routes/WaterDiary.js');
+const { StatusCodes } = require('http-status-codes');
 app.use('/api/v1/search', APIRequestRouter);
 app.use('/api/v1/auth', AuthenticationRouter);
 app.use('/api/v1/foodDiary', authenticationMiddleware, FoodDiaryRouter);
@@ -24,8 +25,6 @@ app.use('/api/v1/exerciseDiary', authenticationMiddleware, ExerciseDiaryRouter);
 app.use('/api/v1/weightDiary', authenticationMiddleware, WeightDiaryRouter);
 app.use('/api/v1/waterDiary', authenticationMiddleware, WaterDiaryRouter)
 
-//Instead of using authentication function as middleware, we simply make a request for verification.
-app.get('/api/v1/verifyAuthentication', authenticationMiddleware);
 
 //Middleware
 app.use(errorHandlerMiddleware);

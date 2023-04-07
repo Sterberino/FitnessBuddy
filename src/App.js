@@ -12,25 +12,61 @@ import { Route, Routes, BrowserRouter as Router, useNavigate, Navigate } from 'r
 import SearchPage from './Assets/Components/SearchPage';
 import AddFoodPage from './Assets/Components/AddFoodPage';
 import Login from './Assets/Components/Login.js';
+import Spinner from './Assets/Components/Spinner';
 
 export const DateContext = React.createContext(null)
 
 function App() {
   
-  const [currentDate, setCurrentDate] = React.useState(new Date())
+  const [currentDate, setCurrentDate] = React.useState(new Date());
+  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [checkingLoginStatus, setCheckingLoginStatus] = React.useState(true);
+  
+  React.useEffect(()=> {
+    if(checkingLoginStatus)
+    {
+      fetch('../api/v1/auth/verifyAuthentication', {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization" : `Bearer ${localStorage.getItem('token')}`
+        },
+        
+    })
+    .then(res => res.json())
+    .then(res => {
+        setLoggedIn(true);
+        
+        const{userName, userId} = res;
+        if(userName && userId)
+        {
+          setLoggedIn(true);
+          setCheckingLoginStatus(false);
+        }
+        else{
+          setLoggedIn(false);
+          setCheckingLoginStatus(false);
+        }
+      })
+    }
+    
+  }, [])
+
+  React.useEffect(()=>{}, [checkingLoginStatus])
+
 
   function IsLoggedIn()
   {
-    const token = localStorage.getItem('token');
-    /*if(token)
-    {
-      console.log(token)
-      return true;
-    }*/
-    return false;
+    return loggedIn;
   }
 
-
+  if(checkingLoginStatus)
+  {
+    return(<>
+      <Spinner />
+    </>)
+  }
 
   //We want to provide the current selected date to the entire app so that we can retrieve information for that corresponding day on multiple pages.
   //We use React Router so that we can navigate from the food lookup / entry page back to the diary page.

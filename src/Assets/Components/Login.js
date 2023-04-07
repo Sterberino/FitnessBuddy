@@ -1,10 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import '../Styles/loginStyles.css'
 import '../Styles/videoWrapper.css'
 
 export default function Login()
 {
+    const navigate = useNavigate();
+
     const [usernameInput, setUsernameInput] = React.useState('');
     const [passwordInput, setPasswordInput] = React.useState('');
     const [emailInput, setEmailInput] = React.useState('')
@@ -12,6 +14,18 @@ export default function Login()
     const [inputErrorMessage, setInputErrorMessage] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const [register, setRegister] = React.useState(false);
+
+    const [registrationRequest, setRegistrationRequest] = React.useState({
+        userName: '',
+        email: '',
+        password: '',
+        initialized: false
+    })
+    const [loginRequest, setLoginRequest] = React.useState({
+        email: '',
+        password: '',
+        initialized: false
+    })
 
     const backgroundVideos = [
         {
@@ -42,14 +56,95 @@ export default function Login()
 
     const [backgroundVideo, setBackgroundVideo] = React.useState(backgroundVideos[Math.floor(Math.random() *backgroundVideos.length)])
     
-    function LoginForm()
-    {
-        function GetErrorDivs()
+    React.useEffect(()=>{
+        if(registrationRequest.initialized === true && registrationRequest.password !== '' && registrationRequest.userName !== '' && registrationRequest.email !== '')
         {
-            let errorLines = inputErrorMessage.split('\n')
-            return errorLines.map((item, index) => <div className="error-text" key = {index} style = {{marginBottom : index === errorLines.length - 1 ? '20px' : '1px'}}>{item}</div>)
+            fetch('../api/v1/auth/register', {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(registrationRequest)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    const token = res.token;
+                    if(token)
+                    {
+                        localStorage.setItem('token', res.token)     
+                    }               
+                })
+                .then(res=> navigate('../'))
+
+
+            setRegistrationRequest({
+                userName: '',
+                email: '',
+                password: '',
+                initialized: false
+            })
+        }
+        
+    }, [registrationRequest])
+
+    React.useEffect(()=>{
+        if(loginRequest.initialized === true && loginRequest.password !== '' && loginRequest.email !== '')
+        {
+            fetch('../api/v1/auth/login', {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: loginRequest.email,
+                    password: loginRequest.password
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                const token = res.token;
+                if(token)
+                {
+                    localStorage.setItem('token', res.token)
+                    navigate('../')
+                }               
+            })
+            .then(res=> navigate('/'))
+
+            setLoginRequest({
+                email: '',
+                password: '',
+                initialized: false
+            })
         }
 
+    }, [loginRequest])
+
+
+    function GetErrorDivs()
+    {
+        let errorLines = inputErrorMessage.split('\n')
+        let errorDivs = errorLines.map((item, index) => <div className="error-text" key = {index} style = {{marginBottom : index === errorLines.length - 1 ? '10px' : '5px'}}>{item}</div>)
+        
+        return(
+            <div
+                style = {{
+                  width: "100%",
+                  height: "40px",
+                  marginTop: "-20px",
+                  marginBottom: "10px"
+                }}
+            >
+                {errorDivs}
+            </div>
+        )
+    }
+
+    function LoginForm()
+    {
+        
         return (
             <div>
                 <div 
@@ -61,32 +156,51 @@ export default function Login()
                     }}
                 >{"Login"}</div>
                 <form 
-                    onSubmit={(event)=> {event.preventDefault()}}
+                    onSubmit={(event)=> {
+                        event.preventDefault()
+                        setInputErrorMessage('');
+                        
+                        let canSend = true;
+                        if(emailInput === '')
+                        {
+                            setInputErrorMessage(prev=> prev+'\nPlease provide a valid email.')
+                            canSend = false;
+                        }
+                        if(passwordInput === '')
+                        {
+                            setInputErrorMessage(prev=> prev+'\nPlease provide a valid password.')
+                            canSend = false;
+                        }
+
+                        if(canSend)
+                        {
+                            setLoginRequest({
+                                email: emailInput,
+                                password: passwordInput,
+                                initialized: true
+                            })
+                        }
+                    }}
                     className = "login-input-form"
                 >
                 <div className="field">
                 <input 
-                    className= {usernameInput === '' ? 'empty': 'not-empty'}
-                    style = {{
-                            backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
-                            backgroundRepeat : "no-repeat",
-                            backgroundSize : "30px 30px",
-
-                        }}
-                        autoComplete="off"
-                        autoFocus = {false}
-                        id = "username-text-input"
-                        type="text" 
-                    
-                        value={usernameInput}
-                        onChange={(e)=> { 
-                            setUsernameInput( e.target.value)
-                        }}
+                    className= {emailInput === '' ? 'empty': 'not-empty'}
+                
+                    autoComplete="off"
+                    autoFocus = {false}
+                    id = "email-text-input"
+                    type="text" 
+                
+                    value={emailInput}
+                    onChange={(e)=> { 
+                        setEmailInput( e.target.value)
+                    }}
                     />
                     <label 
-                        htmlFor = "username-text-input"
-                        className= {usernameInput === '' ? 'empty' : 'not-empty'}
-                    >{"Username"}</label>
+                        htmlFor = "email-text-input"
+                        className= {emailInput === '' ? 'empty' : 'not-empty'}
+                    >{"Email"}</label>
                     </div>
                     <div className="field">
                     {passwordInput !== '' && 
@@ -97,10 +211,7 @@ export default function Login()
                     <input 
                         className= {passwordInput === '' ? 'empty': 'not-empty'}
                         style = {{
-                            backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
-                            backgroundRepeat : "no-repeat",
-                            backgroundSize : "30px 30px",
-                            marginBottom : inputErrorMessage === '' ? '20px' : ''
+                            marginBottom : inputErrorMessage === '' ? '20px' : '0'
                         }}
                         autoComplete="off"
                         autoFocus = {false}
@@ -118,7 +229,7 @@ export default function Login()
                     >{"Password"}</label>
                      </div>
                      {inputErrorMessage !== '' && GetErrorDivs()} 
-                
+
                      <div 
                     className="row-flex"
                     style={{
@@ -152,6 +263,7 @@ export default function Login()
                             setEmailInput('');
                             setUsernameInput('');
                             setPasswordInput('');
+                            setInputErrorMessage('');
                         }}
                     >{"Register"}
                     </div>
@@ -163,11 +275,6 @@ export default function Login()
 
     function RegisterForm()
     {
-        function GetErrorDivs()
-        {
-            let errorLines = inputErrorMessage.split('\n')
-            return errorLines.map((item, index) => <div className="error-text" key = {index} style = {{marginBottom : index === errorLines.length - 1 ? '20px' : '1px'}}>{item}</div>)
-        }
 
         return (
             <div>
@@ -180,18 +287,43 @@ export default function Login()
                     }}
                 >{"Register"}</div>
                 <form 
-                    onSubmit={(event)=> {event.preventDefault()}}
+                    onSubmit={(event)=> {
+                        event.preventDefault()
+                        setInputErrorMessage('');
+                        
+                        let canSend = true;
+                        if(emailInput === '')
+                        {
+                            setInputErrorMessage(prev=> prev+'\nPlease provide a valid email.')
+                            canSend = false;
+                        }
+                        if(usernameInput === '')
+                        {
+                            setInputErrorMessage(prev=> prev+'\nPlease provide a valid username.')
+                            canSend = false;
+                        }
+                        if(passwordInput === '')
+                        {
+                            setInputErrorMessage(prev=> prev+'\nPlease provide a valid password.')
+                            canSend = false;
+                        }
+
+                        if(canSend)
+                        {
+                            setRegistrationRequest({
+                                userName: usernameInput,
+                                email: emailInput,
+                                password: passwordInput,
+                                initialized: true
+                            })
+                        }
+                    }}
                     className = "login-input-form"
                 >
                     <div className="field">
                         <input 
                             className= {emailInput === '' ? 'empty': 'not-empty'}
-                            style = {{
-                                    backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
-                                    backgroundRepeat : "no-repeat",
-                                    backgroundSize : "30px 30px",
-
-                                }}
+                 
                             autoComplete="off"
                             autoFocus = {false}
                             id = "email-text-input"
@@ -210,12 +342,6 @@ export default function Login()
                     <div className="field">
                         <input 
                             className= {usernameInput === '' ? 'empty': 'not-empty'}
-                            style = {{
-                                backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
-                                backgroundRepeat : "no-repeat",
-                                backgroundSize : "30px 30px",
-
-                            }}
                             autoComplete="off"
                             autoFocus = {false}
                             id = "username-text-input"
@@ -240,10 +366,7 @@ export default function Login()
                     <input 
                         className= {passwordInput === '' ? 'empty': 'not-empty'}
                         style = {{
-                            backgroundImage : `${inputErrorMessage !== '' ? `url(${process.env.PUBLIC_URL}/Images/exclamation-icon.png)` : ''}`,
-                            backgroundRepeat : "no-repeat",
-                            backgroundSize : "30px 30px",
-                            marginBottom : inputErrorMessage === '' ? '20px' : ''
+                            marginBottom : (inputErrorMessage === '' ? '20px' : '0px')
                         }}
                         autoComplete="off"
                         autoFocus = {false}
@@ -260,28 +383,30 @@ export default function Login()
                         className= {passwordInput === '' ? 'empty' : 'not-empty'}    
                     >{"Password"}</label>
                      </div>
+                     
                      {inputErrorMessage !== '' && GetErrorDivs()} 
-                
-                     <div 
-                    className="row-flex"
-                    style={{
-                        width: "100%",
-                        padding: "0",
-                        marginTop: "-5px",
-                        marginBottom: "50px",
-                        flexDirection: "row-reverse"
-                    }}
-                >
-                    <input 
-                        style = {{
-                            width: "35%"
+
+                    <div 
+                        className="row-flex"
+                        style={{
+                            width: "100%",
+                            padding: "0",
+                            marginTop: "-5px",
+                            marginBottom: "50px",
+                            flexDirection: "row-reverse"
                         }}
-                        type = "submit"
-                        value={"Register"}
-                    ></input>
+                    >
+                        <input 
+                            style = {{
+                                width: "35%",
+                                marginBottom: inputErrorMessage === '' ? '0' : '-25px'
+                            }}
+                            type = "submit"
+                            value={"Register"}
+                        ></input>
                     </div>
+
                 </form>
-                
                 <div 
                     className="row-flex"
                     style={{
@@ -298,6 +423,7 @@ export default function Login()
                             setEmailInput('');
                             setUsernameInput('');
                             setPasswordInput('');
+                            setInputErrorMessage('');
                         }}
                     >{"Sign In"}
                     </div>
@@ -307,10 +433,14 @@ export default function Login()
         )
     }
 
-
+    if(localStorage.getItem('token'))
+    {
+        navigate(0)
+    }
 
     return (
         <>
+            
             <div className="displayCard"
                 style = {{
                     zIndex : "11",
@@ -320,7 +450,8 @@ export default function Login()
                     maxHeight : "450px",
                     justifyContent : "flex-start",
                     left: "calc(50% - 180px)",
-                    top: "calc(50% - 200px)"
+                    top: "calc(50% - 200px)",
+                    overflow: "hidden"
                 }}
             >
                  <div 
@@ -337,10 +468,10 @@ export default function Login()
                 {/*Dont ask me how I screwed this up, but I wrapped
                 the form in a title div. I styled it while is was wrapped in
                 the div and keeping it doesn't ruin anything so I am leaving it.*/}
-                {!register && <div className="title">
+                {!register && <div className="title" style = {{background: "rgba(0,0,0,0)", color: "rgba(0,0,0,0)", textShadow: "0px 0px 0px rgba(0,0,0,0)"}}>
                     {LoginForm()}
                 </div>}
-                {register && <div className="title">
+                {register && <div className="title" style = {{background: "rgba(0,0,0,0)", color: "rgba(0,0,0,0)", textShadow: "0px 0px 0px rgba(0,0,0,0)"}}>
                     {RegisterForm()}
                 </div>}
 

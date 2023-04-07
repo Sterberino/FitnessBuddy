@@ -23,8 +23,9 @@ const Authenticate = async (req, res, next)=> {
         
         req.user = {
             userId: payload.userId,
-            name: payload.userName
+            name: payload.name
         };
+
         next();
     }
     catch(err)

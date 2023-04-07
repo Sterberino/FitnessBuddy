@@ -38,7 +38,16 @@ const Login = async(req, res) => {
     res.status(StatusCodes.OK).json({user: {userName: user.userName}, token});
 }
 
+const verifyAuthentication = async (req, res) => {
+    if(!req.user.userId || !req.user.name)
+    {
+        return res.status(StatusCodes.NOT_FOUND).send('No user found with the provided token.')
+    }
+     res.status(StatusCodes.OK).json({userId: req.user.userId, userName: req.user.name})
+}
+
 module.exports = {
     Register,
-    Login
+    Login,
+    verifyAuthentication
 }
