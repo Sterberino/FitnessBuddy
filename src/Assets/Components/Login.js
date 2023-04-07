@@ -29,6 +29,14 @@ export default function Login()
         {
             url: `${process.env.PUBLIC_URL}/Videos/pexels-Man-lifting-1.mp4`,
             overlayAlpha: 0.8
+        },
+        {
+            url: `${process.env.PUBLIC_URL}/Videos/pexels-Man-lifting-2.mp4`,
+            overlayAlpha: 0.8
+        },
+        {
+            url: `${process.env.PUBLIC_URL}/Videos/pexels-Woman-rock-climbing.mp4`,
+            overlayAlpha: 0.8
         }
     ]
 
