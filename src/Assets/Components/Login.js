@@ -67,16 +67,22 @@ export default function Login()
                 },
                 body: JSON.stringify(registrationRequest)
             })
-                .then(res => res.json())
+                .then(res => {
+                if(res.status !== 200) { 
+                    throw new Error(res.status)
+                } 
+                return res.json()})
                 .then(res => {
                     const token = res.token;
                     if(token)
                     {
                         localStorage.setItem('token', res.token)     
-                    }               
+                    }                   
                 })
-                .then(res=> navigate('../'))
-
+                .catch(err => {
+                    setInputErrorMessage('\nInvalid Credentials');
+                })
+            
 
             setRegistrationRequest({
                 userName: '',
@@ -102,21 +108,25 @@ export default function Login()
                     password: loginRequest.password
                 })
             })
-            .then(res => res.json())
+            .then(res => {
+                if(res.status !== 200) { 
+                    throw new Error(res.status)
+                } 
+                return res.json()})
             .then(res => {
                 const token = res.token;
                 if(token)
                 {
                     localStorage.setItem('token', res.token)
-                    navigate('../')
-                }               
+                }            
             })
-            .then(res=> navigate('/'))
-
-            setLoginRequest({
-                email: '',
-                password: '',
-                initialized: false
+            .catch(err => {
+                setInputErrorMessage('\nInvalid Credentials');
+                setLoginRequest({
+                    password: '',
+                    email: '',
+                    initialized: false
+                })
             })
         }
 
@@ -158,7 +168,7 @@ export default function Login()
                 <form 
                     onSubmit={(event)=> {
                         event.preventDefault()
-                        setInputErrorMessage('');
+                        setInputErrorMessage(prev => prev.includes('Invalid Crendentials') ? prev: '');
                         
                         let canSend = true;
                         if(emailInput === '')
