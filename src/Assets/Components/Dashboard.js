@@ -2,13 +2,17 @@ import React from "react";
 import '../Styles/bodyStyles.css'
 import '../Styles/nutritionPageStyles.css'
 import '../Styles/lineChartStyles.css'
+import '../Styles/tabStyles.css'
 
 import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard()
 {
+    const navigate = useNavigate();
+
     function GetName()
     {
         const name = "Zachary";
@@ -20,20 +24,46 @@ export default function Dashboard()
     information and provide it to those components.*/
     return (
         <div>
-            <div className="title"
-                style = {{
-                    'fontSize' : '1.1em',
-                    'marginTop' : '10px',
-                }}>
-                {"Welcome back, "}
+            <div 
+                className="row-flex"
+                style= {{paddingLeft: "10px",paddingRight: "10px"}}
+            >
+                <div 
+                    className="column-flex"
+                    style = {{
+                        justifyContent: "left"
+                    }}    
+                >
+                    <div className="title"
+                    style = {{
+                        marginLeft: '0px',
+                        'fontSize' : '1.1em',
+                        'marginTop' : '10px',
+                    }}>
+                    {"Welcome back, "}
+                    </div>
+                    <div className="title"
+                    style = {{
+                        marginLeft: '-25px',
+                        'fontSize' : '1.65em',
+                        'marginBottom' : '10px'
+                    }}>
+                    {GetName()}
+                    </div>
+                </div>
+                <div 
+                    className="title tab-button"
+                    style = {{width: "50px"}}
+                    onClick={()=> {
+                        localStorage.clear('token')
+                        navigate(0);
+                    }}    
+                >
+                    {"Sign Out"}
+                </div>
             </div>
-            <div className="title"
-                style = {{
-                    'fontSize' : '1.65em',
-                    'marginBottom' : '10px'
-                }}>
-                {GetName()}
-            </div>
+           
+           
 
             <DashboardCalorieOverview />
             <DashboardMacroOverview />
