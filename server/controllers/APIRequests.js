@@ -113,7 +113,7 @@ const ExerciseSearch = async (req, res)=>{
             weightDuringExercise: weight,
             exerciseDuration: duration,
             //(0.45kg / lb) * user weight * MET  = cal/hr. (cal/hr) / 60 = cal/min * duration in minutes is total burned cals
-            calories: 0.453592 * weight * item.met / 60 * duration 
+            caloriesBurned: 0.453592 * weight * item.met / 60 * duration 
         }
     })
     API_Response.payload = exerciseResponse;
