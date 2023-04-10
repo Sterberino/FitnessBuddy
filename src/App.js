@@ -17,19 +17,19 @@ import Spinner from './Assets/Components/Spinner';
 import useVerifyLogin from './Assets/Hooks/useVerifyLogin';
 
 export const DateContext = React.createContext(null);
+export const DiaryContext = React.createContext(null);
+
 
 function App() {
   
+  //This will serve as the backbone of our app.
+  const [diaryInfo, setDiaryInfo] = React.useState({
+    foodEntries: [],
+    exerciseEntries: [],
+  })
+
   const [currentDate, setCurrentDate] = React.useState(new Date());
   const [checkingLoginStatus, loggedIn] = useVerifyLogin();
-  
-  React.useEffect(()=>{}, [checkingLoginStatus])
-
-
-  function IsLoggedIn()
-  {
-    return loggedIn;
-  }
 
   if(checkingLoginStatus)
   {
@@ -42,18 +42,20 @@ function App() {
   //We use React Router so that we can navigate from the food lookup / entry page back to the diary page.
   return (
     <DateContext.Provider value = {{currentDate : currentDate, setCurrentDate : setCurrentDate}}>
+    <DiaryContext.Provider value = {{diaryInfo: diaryInfo, setDiaryInfo: setDiaryInfo}}>    
         <Router>
     
           <Routes>
-            <Route exact path= {'/'} element= {IsLoggedIn() ? <Home initialPage={0}/> : <Navigate to = "/login" />}></Route>
-            <Route exact path='/Diary' element= {IsLoggedIn() ? <Home initialPage={1}/> : <Navigate to = "/login" replace />}></Route>
-            <Route exact path='/Nutrition'  element= {IsLoggedIn() ? <Home initialPage={2}/> : <Navigate to = "/login" replace />}></Route>
-            <Route exact path='/Search'  element= {IsLoggedIn() ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>
-            <Route exact path = 'Search/Result' element = {IsLoggedIn() ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
-            <Route exact path = '/login' element = {IsLoggedIn() ? <Navigate to = "/" replace /> : <Login />} />
+            <Route exact path= {'/'} element= {loggedIn ? <Home initialPage={0}/> : <Navigate to = "/login" />}></Route>
+            <Route exact path='/Diary' element= {loggedIn ? <Home initialPage={1}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path='/Nutrition'  element= {loggedIn ? <Home initialPage={2}/> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path='/Search'  element= {loggedIn ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = 'Search/Result' element = {loggedIn ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = '/login' element = {loggedIn ? <Navigate to = "/" replace /> : <Login />} />
           </Routes>
 
         </Router>
+    </DiaryContext.Provider>
     </DateContext.Provider>
   );
 }

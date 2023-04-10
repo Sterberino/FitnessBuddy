@@ -7,7 +7,7 @@ const Exercise = require('../models/ExerciseDiaryEntry.js')
 const {StatusCodes} = require('http-status-codes')
 const CustomAPIError = require('../errors/CustomApiError.js')
 
-//Post a food entry
+//Post an exercise entry
 const CreateEntry = async (req, res) => {
     req.body.createdBy = req.user.userId;
     const exerciseEntry = await Exercise.create(req.body);
@@ -17,12 +17,12 @@ const CreateEntry = async (req, res) => {
 
 //Get all of the entries in a given day for the current user.
 const ReadAllEntries = async (req, res)=> {
-    if(!req.body.DiaryDate)
+    if(!req.query.DiaryDate)
     {
         throw new CustomAPIError('A date must be provided for exercise diary queries.', StatusCodes.BAD_REQUEST);
     }
 
-    const date = new Date(req.body.DiaryDate);
+    const date = new Date(req.query.DiaryDate);
 
     //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
     const exercises = await Exercise.find({

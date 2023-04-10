@@ -17,7 +17,7 @@ const ExerciseDiaryEntrySchema = new mongoose.Schema({
     },
     DiaryDate: {
         type: Date,
-        default: new Date()
+        required: [true, 'A date must be provided when creating a new Exercise entry for a user diary.']
     },
     weightDuringExercise: {
         type: Number,

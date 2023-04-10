@@ -13,12 +13,12 @@ const CreateEntry = async (req, res) => {
 
 //Get all of the entries in a given day for the current user.
 const ReadAllEntries = async (req, res)=> {
-    if(!req.body.DiaryDate)
+    if(!req.query.DiaryDate)
     {
         throw new CustomAPIError('A date must be provided for food diary queries.', StatusCodes.BAD_REQUEST);
     }
 
-    const date = new Date(req.body.DiaryDate);
+    const date = new Date(req.query.DiaryDate);
 
     //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
     const foods = await Food.find({
