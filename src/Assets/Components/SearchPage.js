@@ -7,38 +7,63 @@ import '../Styles/searchPageStyles.css'
 import { useNavigate, useLocation } from "react-router-dom";
 import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
 import Spinner from "./Spinner";
+import { DiaryContext } from "../../App";
 
 export default function SearchPage()
 {
     const location = useLocation();
     const initialMealCategory = (location.state ? location.state.name : null);
 
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
     const [searchInput, setSearchInput] = React.useState('');
     const [activeSearch, setActiveSearch] = React.useState('');
-    const [searchResponseData, setSearchResponseData] = React.useState({foods : []});
+    const [searchResponseData, setSearchResponseData] = React.useState({foods : [], exercises: []});
     const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
     const [SpinnerActive, setSpinnerActive] = React.useState(false)
 
     const SearchItems = ()=>{
         setSpinnerActive(true);
-        setSearchResponseData({foods : []})
-        fetch('../api/v1/search/food?' + new URLSearchParams({
-            foodName : activeSearch,
-        }))
-            .then(res => res.json())
-            .then(res => {
-                if(res.error)
-                {
-                    console.log(`Unable to perform API Request: ${res.error}`)
-                }
-                else{
-                    //console.log(res.payload)
-                    setSearchResponseData({foods : res.payload} )
-                }
-                setSpinnerActive(false)
-            })
+        setSearchResponseData({foods : [], exercises: []})
+        if(mealCategory === 'Exercise')
+        {
+            fetch('../api/v1/search/exercise?' + new URLSearchParams({
+                exerciseName : activeSearch,
+                weight: diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1] ? diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1] : 160 
+            }))
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error)
+                    {
+                        console.log(`Unable to perform API Request: ${res.error}`)
+                    }
+                    else{
+                        console.log(res.payload)
+                        setSearchResponseData(prev=> ({...prev, exercises : res.payload}) )
+                    }
+                    setSpinnerActive(false)
+                })
+        }
+        else{
+            fetch('../api/v1/search/food?' + new URLSearchParams({
+                foodName : activeSearch,
+            }))
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error)
+                    {
+                        console.log(`Unable to perform API Request: ${res.error}`)
+                    }
+                    else{
+                        //console.log(res.payload)
+                        setSearchResponseData(prev=> ({...prev, foods : res.payload}) )
+                    }
+                    setSpinnerActive(false)
+                })
+        }
+        
     }
 
     React.useEffect(()=> {
@@ -46,9 +71,9 @@ export default function SearchPage()
         {
             SearchItems();
         }
-        
     },[activeSearch])
 
+    //TODO : Add react useEffect that looks up user history
 
     React.useEffect(()=> {
         let timeout = null;
@@ -102,7 +127,7 @@ export default function SearchPage()
                     id = "search-input"
                     type="text" 
                     value={searchInput}
-                    placeholder = {"Search For a food"}
+                    placeholder = {`Search for ${mealCategory === 'Exercise' ? 'an exercise' : 'a food'}`}
                     onChange={(e)=> { 
                         setSearchInput(e.target.value)
                     }}
@@ -121,6 +146,26 @@ export default function SearchPage()
     }
 
     const GetSearchResults = ()=> {
+        return mealCategory === 'Exercise' ? GetExerciseSearchResults() : GetFoodSearchResults();
+    }
+
+    function GetExerciseSearchResults()
+    {
+        const SearchResults = searchResponseData.exercises.map(item => {
+            return ({
+                name : item.exerciseName ? item.exerciseName.charAt(0).toUpperCase() + item.exerciseName.slice(1) : "Unknown Name",
+                caloriesBurned : item.caloriesBurned ? item.caloriesBurned : 0,
+                duration: item.duration ? item.duration : 60,
+                met: item.met ? item.met : 0,
+                weight: item.weightDuringExercise ? item.weightDuringExercise : 160, 
+                info: `${Math.trunc(item.caloriesBurned)} cal, ${(item.duration ? item.duration : 60)} minutes`
+            })
+        })
+
+        return SearchResults;
+    }
+
+    const GetFoodSearchResults = ()=> {
         const SearchResults = searchResponseData.foods.map(item => {
             return ({
                 name : item.name ? item.name.charAt(0).toUpperCase() + item.name.slice(1) : "Unknown Name",
@@ -181,7 +226,7 @@ export default function SearchPage()
                     key = {index}
                     style = {{
                         padding: "5px",
-                        cursor : "pointer"
+                        cursor : "pointer",
                     }}
                     onClick = {()=> { OpenAddFoodPage(item)}}
                 >
@@ -193,7 +238,16 @@ export default function SearchPage()
                                 justifyContent: "left"
                             }}
                         >
-                            <div className="title" style = {{textAlign: "left", marginLeft: 0, width: "100%", marginTop: "-5px"}}>{item.name}</div>
+                            <div 
+                                className="title" 
+                                style = {{
+                                    textAlign: "left", 
+                                    marginLeft: 0, 
+                                    width: "100%", 
+                                    marginTop: "-5px",
+                                    marginBottom: "5px", 
+                                    maxWidth: "240px"
+                                }}>{item.name}</div>
                             <div className="nutrient-amount" style = {{textAlign: "left", marginLeft: 0, width: "100%"}}>{item.info}</div>
                         </div>
 
@@ -253,9 +307,10 @@ export default function SearchPage()
                         className="blue-title"
                         style = {{
                             textAlign: "center",
-                            marginLeft : "-20px"
+                            marginLeft : "-20px",
+                            ...(mealCategory === 'Exercise' ? {pointerEvents : 'none'} : '')
                         }}
-                        onClick = {()=> {TogglePopup()}}
+                        onClick = {()=> {mealCategory != 'Exercise' && TogglePopup()}}
                     >{mealCategory}</div>
                     <div></div>
                 </div>
@@ -290,7 +345,7 @@ export default function SearchPage()
                 <div
                     className="blue-title item-added-notification"
                     style = {{pointerEvents: "none"}}
-                >{`Successfully Added Food!`}</div>}
+                >{`Successfully Added ${mealCategory !== 'Exercise' ? 'Food' : 'Exercise'}!`}</div>}
             </div>
             
             {activeSearch !== '' && GetSearchCards(GetSearchResults())}

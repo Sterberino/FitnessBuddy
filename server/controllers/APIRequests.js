@@ -71,20 +71,20 @@ const ExerciseSearch = async (req, res)=>{
     const query = req.query;
     const exerciseName = query ? req.query.exerciseName : null;
     //duration in minutes. 60 by default.
-    const duration = query ? req.query.duration : 60;
+    let duration = query ? req.query.duration : 60;
     //User weight in lbs. 160 by default.
-    const weight = query ? req.query.weight : 160
+    let weight = query ? req.query.weight : 160
 
 
 
     if(!duration || duration < 1)
     {
-        return res.status(StatusCodes.BAD_REQUEST).send('Please provide a valid exercise duration');
+        duration = 60;
     }
 
     if(!weight || weight < 1)
     {
-        return res.status(StatusCodes.BAD_REQUEST).send('Please provide a valid user weight');
+        weight = 160
     }
 
     if(!exerciseName)
