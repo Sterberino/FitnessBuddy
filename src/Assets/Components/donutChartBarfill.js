@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Barfill({rotation, fillPercentage, barColor, glowColor})
 {
-    const fillAmount = fillPercentage * 270;
+    const fillAmount = (fillPercentage > 1 ? 1 : fillPercentage)* 270;
    
     return (
         <div className="bar-fill-container" style = {

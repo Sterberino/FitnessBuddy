@@ -110,8 +110,10 @@ class AreaChart extends Component {
           name: "Weight (lb)",
           data: props.data.map(item => item.y)
         }
-      ]
+      ],
+      timePeriod: props.timePeriod ? props.timePeriod : '90'
     };
+    console.log('Time Period: '+props.timePeriod)
   }
 
 
@@ -123,7 +125,7 @@ class AreaChart extends Component {
             <div className="weight-progress-header">
                 <div className="title">{"Weight"}</div>
                 <div></div>
-                <div className="nutrient-amount">{"last 90 days"}</div>
+                <div className="nutrient-amount">{`last ${this.state.timePeriod} days`}</div>
             </div>
            
             <Chart

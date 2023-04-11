@@ -7,10 +7,55 @@ import '../Styles/nutritionPageStyles.css'
 import DonutChart from "./donutChart";
 import DashboardCalorieWidget from "./DashboardCalorieWidget";
 
-export default function DashboardCalorieOverview()
+export default function DashboardCalorieOverview({diaryInfo})
 {
 
+    function GetCalorieTotalRatio()
+    {
+        let calsEaten = GetTotalDailyCalories();
+        let calsBurned = GetCaloriesBurned();
+        let totalCals = calsEaten - calsBurned;
 
+        totalCals = totalCals > 1 ? 1: totalCals;
+        totalCals = totalCals < 0 ? 0: totalCals;
+
+
+        return totalCals / GetCalorieGoal();
+    }
+
+    function GetTotalDailyCalories()
+    {
+        let initialValue = 0;
+
+        let totalCals = diaryInfo.foodEntries.reduce(
+            (accumulator, currentValue) => accumulator+currentValue.calories,
+            initialValue
+        );
+
+        return totalCals;
+    }
+
+    function GetCaloriesBurned()
+    {
+        let initialValue = 0;
+
+        let totalCals = diaryInfo.exerciseEntries.reduce(
+            (accumulator, currentValue) => accumulator+currentValue.caloriesBurned,
+            initialValue
+        );
+
+        return totalCals;
+    }
+
+    function GetCalorieGoal()
+    {
+        return 2000;
+    }
+
+    const calorieGoal = GetCalorieGoal();
+    const totalDailyCalories = GetTotalDailyCalories();
+    const calorieRatio = GetCalorieTotalRatio();
+    const caloriesBurned = GetCaloriesBurned();
 
     return (
             <div className="displayCard">
@@ -29,7 +74,7 @@ export default function DashboardCalorieOverview()
 
                 <div className="weight-progress-header">
                     <div className="column-flex">
-                        <DonutChart nutritionInformation={[0,0,0,0.5]}/>
+                        <DonutChart nutritionInformation={[0,0,0, calorieRatio]}/>
                         <div 
                             className="title"
                             style = {{
@@ -40,7 +85,7 @@ export default function DashboardCalorieOverview()
                                 textAlign : "center"
                             }}
                         >
-                            {`${"1630"}`}
+                            {`${calorieGoal - Math.trunc(totalDailyCalories) + Math.trunc(caloriesBurned)}`}
                         </div>
                         
                         <div 
@@ -63,9 +108,9 @@ export default function DashboardCalorieOverview()
                             marginLeft : "-35px"
                         }}
                     >
-                        <DashboardCalorieWidget text={"Base Goal"} value = {1690} iconSrc = {`${process.env.PUBLIC_URL}/Images/flag-icon.png`}/>
-                        <DashboardCalorieWidget text={"Food"} value = {0} iconSrc = {`${process.env.PUBLIC_URL}/Images/fork-knife-icon.png`}/>
-                        <DashboardCalorieWidget text={"Exercise"} value = {0} iconSrc = {`${process.env.PUBLIC_URL}/Images/running-icon.png`}/>
+                        <DashboardCalorieWidget text={"Base Goal"} value = {calorieGoal} iconSrc = {`${process.env.PUBLIC_URL}/Images/flag-icon.png`}/>
+                        <DashboardCalorieWidget text={"Food"} value = {Math.trunc(totalDailyCalories)} iconSrc = {`${process.env.PUBLIC_URL}/Images/fork-knife-icon.png`}/>
+                        <DashboardCalorieWidget text={"Exercise"} value = {Math.trunc(caloriesBurned)} iconSrc = {`${process.env.PUBLIC_URL}/Images/running-icon.png`}/>
                     </div>
 
                 </div>

@@ -40,11 +40,39 @@ export default function useFetchDiary()
                 }
             });
 
-            Promise.all([exerciseEntries, foodEntries])
+            
+            const weightEntries = fetch('../api/v1/weightDiary?', 
+            {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            const waterEntries = fetch('../api/v1/waterDiary?' + new URLSearchParams({
+                DiaryDate: currentDate
+            }), 
+            {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            Promise.all([exerciseEntries, foodEntries, weightEntries, waterEntries])
                 .then((res) => Promise.all(res.map(r => r.json())))
-                .then(([exerciseEntries, foodEntries]) => {
-                    const newDiaryInfo = {...diaryInfo, foodEntries: foodEntries.foods, exerciseEntries: exerciseEntries.exercises, requiresUpdate: false};
-                    //console.log(JSON.stringify( newDiaryInfo));
+                .then(([exerciseEntries, foodEntries, weightEntries, waterEntries]) => {
+                    const newDiaryInfo = {
+                        ...diaryInfo, 
+                        foodEntries: foodEntries.foods, 
+                        exerciseEntries: exerciseEntries.exercises, 
+                        weightEntries: weightEntries.weightEntries,
+                        waterEntries: waterEntries.waterEntries,
+                        requiresUpdate: false};
                     setDiaryInfo(newDiaryInfo);
 
                 })

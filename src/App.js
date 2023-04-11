@@ -24,12 +24,21 @@ function App() {
   
   //This will serve as the backbone of our app.
   const [diaryInfo, setDiaryInfo] = React.useState({
+    userName: '',
     foodEntries: [],
     exerciseEntries: [],
+    weightEntries: [],
+    waterEntries: [],
+    requiresUpdate: true
   })
 
+  function OnVerifyLogin(name)
+  {
+    setDiaryInfo(prev => ({...prev, userName: name}))
+  }
+  
   const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [checkingLoginStatus, loggedIn] = useVerifyLogin();
+  const [checkingLoginStatus, loggedIn] = useVerifyLogin((name)=>{OnVerifyLogin(name)});
 
   if(checkingLoginStatus)
   {

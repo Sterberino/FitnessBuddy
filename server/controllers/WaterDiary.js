@@ -12,12 +12,12 @@ const CreateEntry = async (req, res) => {
 }
 
 const ReadEntries = async (req, res) => {
-    if(!req.body.DiaryDate)
+    if(!req.query.DiaryDate)
     {
         throw new CustomAPIError('No date provided for the query', StatusCodes.BAD_REQUEST);
     }
 
-    const date = new Date(req.body.DiaryDate);
+    const date = new Date(req.query.DiaryDate);
 
     const waterEntries = await Water.find({
         createdBy: req.user.userId,

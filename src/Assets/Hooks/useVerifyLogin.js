@@ -1,10 +1,11 @@
 import React from "react";
+import { DiaryContext } from "../../App";
 
-export default function useVerifyLogin()
+export default function useVerifyLogin(OnVerifyLogin)
 {
     const [checkingLoginStatus, setCheckingLoginStatus] = React.useState(true);
     const [loggedIn, setLoggedIn] = React.useState(false);
-
+   
     React.useEffect(()=> {
       if(checkingLoginStatus)
       {
@@ -24,6 +25,10 @@ export default function useVerifyLogin()
           const{userName, userId} = res;
           if(userName && userId)
           {
+            if(OnVerifyLogin)
+            {
+                OnVerifyLogin(userName)
+            }
             setLoggedIn(true);
             setCheckingLoginStatus(false);
           }

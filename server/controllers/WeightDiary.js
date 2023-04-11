@@ -44,7 +44,7 @@ const ReadEntries = async (req, res)=> {
     //Get all the weight entries posted by the given user if a date is not provided in the body.
     const weightEntries = await Weight.find({
         createdBy: req.user.userId
-    }).sort('createdAt');
+    }).sort({DiaryDate: 1});
 
     res
         .status(StatusCodes.OK)

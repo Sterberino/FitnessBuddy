@@ -8,14 +8,32 @@ import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
 import { useNavigate } from "react-router-dom";
+import { DiaryContext } from "../../App";
 
 export default function Dashboard()
 {
     const navigate = useNavigate();
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+
+
+    function GetTimePeriod()
+    {
+        let highestDifference = 0;
+        for(let i = 0; i < diaryInfo.weightEntries.length; i++)
+        {
+            let difference = new Date().getTime() - new Date(diaryInfo.weightEntries[i].DiaryDate).getTime();
+            difference /= (1000 * 3600 * 24);
+            if(difference > highestDifference)
+            {
+                highestDifference = difference;
+            }
+        }
+        return Math.trunc(highestDifference);
+    }
 
     function GetName()
     {
-        const name = "Zachary";
+        const name = diaryInfo.userName;
         return name;
     }
 
@@ -65,8 +83,8 @@ export default function Dashboard()
            
            
 
-            <DashboardCalorieOverview />
-            <DashboardMacroOverview />
+            <DashboardCalorieOverview diaryInfo={diaryInfo}/>
+            <DashboardMacroOverview diaryInfo = {diaryInfo}/>
 
             <div
                 className="displayCard"
@@ -75,27 +93,24 @@ export default function Dashboard()
                 }}
             >
                 
-                <WeightAreaChart data = {
-                [
+                <WeightAreaChart 
+                    data = 
                     {
-                        x : "01/23", 
-                        y : 152
-                    }, 
-                    {
-                        x : "02/23",
-                        y : 164
-                    },
+                        diaryInfo.weightEntries.map(item => {
+                            const date = new Date(item.DiaryDate);
+                            const month = date.getMonth() < 10 ? `0${date.getMonth()+1}` : date.getMonth() + 1;
+                            return {
+                                x: `${month}/${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`,
+                                y: item.userWeight
+                            }
                     
-                    {
-                        x : "03/23",
-                        y : 172
-                    } , 
-                    {
-                        x : "04/23",
-                        y : 181
+                        })
                     }
-                ]
-                }/>
+                    timePeriod = {
+                        GetTimePeriod()
+                    }
+
+                />
             </div>
         </div>
     )
