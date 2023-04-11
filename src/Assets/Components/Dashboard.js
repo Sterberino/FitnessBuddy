@@ -8,14 +8,14 @@ import WeightAreaChart from './WeightAreaChart.js';
 import DashboardMacroOverview from "./DashboardMacroOverview.js";
 import DashboardCalorieOverview from "./DashboardCalorieOverview";
 import { useNavigate } from "react-router-dom";
-import { DiaryContext } from "../../App";
+import { DiaryContext, DateContext } from "../../App";
 
 export default function Dashboard()
 {
     const navigate = useNavigate();
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
-
-
+    const {currentDate, setCurrentDate} = React.useContext(DateContext);
+    
     function GetTimePeriod()
     {
         let highestDifference = 0;

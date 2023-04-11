@@ -113,7 +113,6 @@ class AreaChart extends Component {
       ],
       timePeriod: props.timePeriod ? props.timePeriod : '90'
     };
-    console.log('Time Period: '+props.timePeriod)
   }
 
 

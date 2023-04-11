@@ -1,5 +1,4 @@
 import React from "react";
-import { DateContext } from "../../App.js";
 
 import DateSetterButton from "./DateSetterButton.js";
 import DiaryItemCard from "./DiaryItemCard.js"
@@ -8,31 +7,50 @@ import '../Styles/bodyStyles.css'
 import '../Styles/footerStyles.css'
 import '../Styles/datepickerStyles.css'
 
+import { DiaryContext, DateContext } from "../../App.js";
+
+import { useNavigate } from "react-router-dom";
+
 export default function DiaryPage()
 {
-    const { setCurrentDate} = React.useContext(DateContext)
-    
-    
+    const { currentDate, setCurrentDate} = React.useContext(DateContext);
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+  
+    const navigate = useNavigate();
+ 
     function NextDay()
     {
+        
         setCurrentDate((prev) => {
             return new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 1);
         })    
+    
     }
 
     function PreviousDay()
     {
         setCurrentDate((prev) => {
-            return new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 1);
+            return new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() -1);
         })    
+
     }
 
     function GetDailyCalories()
     {
         const vals = {
-            goal : 1750,
-            food : 0,
-            exercise : 0
+            goal : 2000,
+            food : Math.trunc(diaryInfo.foodEntries.reduce(
+                (accumulator, currentVal) => {
+                    return accumulator+currentVal.calories
+                },
+                0
+            )),
+            exercise : Math.trunc(diaryInfo.exerciseEntries.reduce(
+                (accumulator, currentVal) => {
+                    return accumulator+currentVal.caloriesBurned
+                },
+                0
+            ))
         }
 
         return vals;

@@ -11,11 +11,9 @@ export default function useFetchDiary()
     const {currentDate, setCurrentDate} = React.useContext(DateContext);
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
 
-    React.useEffect(()=>{
-        if(fetchingDiaryInfo)
+    React.useEffect(()=>{    
+        if(fetchingDiaryInfo && diaryInfo.currentDate !== currentDate)
         {
-            console.log(currentDate)
-        
             const exerciseEntries = fetch('../api/v1/exerciseDiary?' + new URLSearchParams({
                 DiaryDate: currentDate
             }), 
@@ -39,7 +37,7 @@ export default function useFetchDiary()
                     "authorization" : `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+    
             
             const weightEntries = fetch('../api/v1/weightDiary?', 
             {
@@ -50,7 +48,7 @@ export default function useFetchDiary()
                     "authorization" : `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+    
             const waterEntries = fetch('../api/v1/waterDiary?' + new URLSearchParams({
                 DiaryDate: currentDate
             }), 
@@ -62,7 +60,7 @@ export default function useFetchDiary()
                     "authorization" : `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+    
             Promise.all([exerciseEntries, foodEntries, weightEntries, waterEntries])
                 .then((res) => Promise.all(res.map(r => r.json())))
                 .then(([exerciseEntries, foodEntries, weightEntries, waterEntries]) => {
@@ -72,15 +70,24 @@ export default function useFetchDiary()
                         exerciseEntries: exerciseEntries.exercises, 
                         weightEntries: weightEntries.weightEntries,
                         waterEntries: waterEntries.waterEntries,
+                        currentDate: currentDate,
                         requiresUpdate: false};
                     setDiaryInfo(newDiaryInfo);
-
+    
                 })
                 .then(res=> {
                     setFetchingDiaryInfo(false);
                 })
+        }  
+        else{
+            const newDiaryInfo = {
+                ...diaryInfo, 
+                currentDate: currentDate,
+                requiresUpdate: false};
+            setDiaryInfo(newDiaryInfo);
+            setFetchingDiaryInfo(false)
         }
-    }, [])
+    }, [fetchingDiaryInfo])
 
-    return [fetchingDiaryInfo];
+    return [fetchingDiaryInfo, setFetchingDiaryInfo];
 }

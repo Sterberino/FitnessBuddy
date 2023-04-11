@@ -29,7 +29,7 @@ function App() {
     exerciseEntries: [],
     weightEntries: [],
     waterEntries: [],
-    requiresUpdate: true
+    currentDate: new Date()
   })
 
   function OnVerifyLogin(name)

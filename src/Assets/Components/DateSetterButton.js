@@ -7,7 +7,7 @@ import { DateContext } from "../../App.js";
 export default function DateSetterButton()
 {
     const [datepickerOpen, setDatepickerOpen] = React.useState(false);
-    const {currentDate, setCurrentDate} = useContext(DateContext)
+    const {currentDate, setCurrentDate} = useContext(DateContext);
 
     const ToggleDatePicker = () => {
         if(datepickerOpen)
@@ -84,8 +84,8 @@ export default function DateSetterButton()
                     currentDate = {currentDate}
                     SubmitDateChange = {
                         (date) => {
-                            ToggleDatePicker()
-                            setCurrentDate(date)
+                            ToggleDatePicker();
+                            setCurrentDate(date);
                         }
                     }
                     CancelDateChange = {() => {ToggleDatePicker()}}  
