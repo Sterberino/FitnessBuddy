@@ -115,7 +115,7 @@ const DeleteEntry = async (req, res) => {
         params: {id: foodEntryId}
     } = req;
 
-    const foodEntry = Food.findByIdAndRemove({
+    const foodEntry = await Food.findByIdAndRemove({
         _id: foodEntryId,
         createdBy: userId
     })

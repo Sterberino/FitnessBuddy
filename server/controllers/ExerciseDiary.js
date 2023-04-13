@@ -120,7 +120,7 @@ const DeleteEntry = async (req, res) => {
         params: {id: exerciseEntryId}
     } = req;
 
-    const exerciseEntry = Exercise.findByIdAndRemove({
+    const exerciseEntry = await Exercise.findByIdAndRemove({
         _id: exerciseEntryId,
         createdBy: userId
     })

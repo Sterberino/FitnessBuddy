@@ -19,6 +19,7 @@ export default function AddFoodPage()
     const [nutrientsExpanded, setNutrientsExpanded] = React.useState(false)
     const [post, setPost] = React.useState(false);
     const [editMode, setEditMode] = React.useState(location.state && location.state.editMode ? location.state.editMode : false)
+    const [deleteEntry, setDeleteEntry] = React.useState(false);
 
     const {currentDate, setCurrentDate} = React.useContext(DateContext); 
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext)
@@ -80,7 +81,38 @@ export default function AddFoodPage()
 
 
     }, [post])
+    React.useEffect(()=>{
+        if(deleteEntry)
+        {
+            let foodID = food._id;
+            let fetchMethod = "DELETE";
+            let fetchUrl = `../api/v1/foodDiary/${foodID}`;
 
+            fetch(fetchUrl, {
+                method: fetchMethod,
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(res =>{
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
+                    setDeleteEntry(false);
+                })
+                .then(()=> {     
+                    navigate('/Diary') 
+                })
+
+        }
+    }, [deleteEntry])
 
     const navigate = useNavigate()
 
@@ -436,8 +468,31 @@ export default function AddFoodPage()
                     </div>
 
                 </div>
-                
-                {/*------------------------------TODO HERE: IF editMode -> Delete Button---------------------------------------*/}
+               
+                {editMode &&
+                    <div className="nutrient-keys-divider"></div>
+                }
+
+                {editMode && 
+                    <div 
+                        className= "error-text-fancy"
+                        style = {{
+                            position: 'relative',
+                            right: 'auto',
+                            left: '37%',
+                            marginTop: '5px',
+                            marginBottom: '5px',
+                            marginRight: '5px'
+                        }}
+                        onClick={()=>{
+                            console.log('DELETE')
+                            setDeleteEntry(true);
+                        }}
+                    >{"Delete Entry"}
+                    </div>/*TODO HERE: IF editMode -> Delete Button*/
+                }
+
+
 
                 <img 
                 src= {`${process.env.PUBLIC_URL}/Images/Down-Arrow-Icon-B.png`} 

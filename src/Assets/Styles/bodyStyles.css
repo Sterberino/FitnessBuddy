@@ -79,3 +79,40 @@ body{
     backdrop-filter : blur(3px);
     position : fixed;
 }
+
+.error-text-fancy
+{
+    color: rgba(0, 0, 0, 0) !important;
+    background-image: linear-gradient(rgba(215, 41, 41, 1), rgba(165, 41, 41, 1));
+    background-clip: text;
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-size: 0.8em;
+
+    
+    transition: all 0.2s ease-in-out;
+}
+
+.blue-title{
+    color: rgba(0,0,0,0) !important;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    font-size: 0.8em;
+
+    text-shadow: 0px 0px 1px rgba(0, 225, 255, 0.2);
+
+    background-image: linear-gradient(rgba(0,235, 255, 1), rgba(0,165, 225, 1));
+    background-clip: text;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+
+    transition: all 0.2s ease-in-out;
+}
+
+.error-text-fancy:hover{
+    transform: scale(1.03, 1.03);
+    filter: brightness(1.1);
+    cursor: pointer;
+}
+

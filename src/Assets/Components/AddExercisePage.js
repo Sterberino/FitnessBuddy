@@ -14,6 +14,7 @@ export default function AddExercisePage()
     const [editMode, setEditMode] = React.useState(location.state && location.state.editMode ? location.state.editMode : false)
     const [exercise, setExercise] = React.useState(location.state && location.state.exercise ? location.state.exercise : null)
     const [post, setPost] = React.useState(false);
+    const [deleteEntry, setDeleteEntry] = React.useState(false);
     const {currentDate, setCurrentDate} = React.useContext(DateContext); 
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext)
 
@@ -68,9 +69,40 @@ export default function AddExercisePage()
                 })
 
         }
-
-
     }, [post])
+
+    React.useEffect(()=>{
+        if(deleteEntry)
+        {
+            let exerciseID = exercise._id;
+            let fetchMethod = "DELETE";
+            let fetchUrl = `../api/v1/exerciseDiary/${exerciseID}`;
+
+            fetch(fetchUrl, {
+                method: fetchMethod,
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(res =>{
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
+                    setDeleteEntry(false);
+                })
+                .then(()=> {     
+                    navigate('/Diary') 
+                })
+
+        }
+    }, [deleteEntry])
 
 
     const navigate = useNavigate()
@@ -161,7 +193,7 @@ export default function AddExercisePage()
                             maxWidth: "320px",
                             backgroundRepeat: ''
                         }}
-                >{exercise.name}</div>
+                >{exercise.exerciseName}</div>
                
                 <div className="nutrient-keys-divider"></div>
                 <div 
@@ -205,9 +237,29 @@ export default function AddExercisePage()
                     <div className="title">{"Weight during exercise"}</div>
                     <div className="blue-title">{exercise.weightDuringExercise}</div>
                 </div>
-            </div>
+                {editMode &&
+                    <div className="nutrient-keys-divider"></div>
+                }
 
-            {/*TODO HERE: IF editMode -> Delete Button*/}
+                {editMode && 
+                    <div 
+                        className= "error-text-fancy"
+                        style = {{
+                            position: 'relative',
+                            right: 'auto',
+                            left: '37%',
+                            marginTop: '5px',
+                            marginBottom: '5px',
+                            marginRight: '5px'
+                        }}
+                        onClick={()=>{
+                            console.log('DELETE')
+                            setDeleteEntry(true);
+                        }}
+                    >{"Delete Entry"}
+                    </div>/*TODO HERE: IF editMode -> Delete Button*/
+                }
+            </div>  
         </>
     )
 
