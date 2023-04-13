@@ -31,7 +31,7 @@ export default function SearchPage()
         {
             fetch('../api/v1/search/exercise?' + new URLSearchParams({
                 exerciseName : activeSearch,
-                weight: diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1] ? diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1] : 160 
+                weight: diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1].userWeight ? diaryInfo.weightEntries[diaryInfo.weightEntries.length - 1].userWeight : 160 
             }))
                 .then(res => res.json())
                 .then(res => {
@@ -40,7 +40,6 @@ export default function SearchPage()
                         console.log(`Unable to perform API Request: ${res.error}`)
                     }
                     else{
-                        console.log(res.payload)
                         setSearchResponseData(prev=> ({...prev, exercises : res.payload}) )
                     }
                     setSpinnerActive(false)
@@ -57,7 +56,6 @@ export default function SearchPage()
                         console.log(`Unable to perform API Request: ${res.error}`)
                     }
                     else{
-                        //console.log(res.payload)
                         setSearchResponseData(prev=> ({...prev, foods : res.payload}) )
                     }
                     setSpinnerActive(false)
@@ -142,6 +140,7 @@ export default function SearchPage()
 
     const AddItemToDiary = (item)=> {
         console.log(`Clicked Add One Button with item: ${item.name} ${item.info}`);
+        console.log(item)
         setRecentlyAddedItem(item)
     }
 
@@ -154,10 +153,12 @@ export default function SearchPage()
         const SearchResults = searchResponseData.exercises.map(item => {
             return ({
                 name : item.exerciseName ? item.exerciseName.charAt(0).toUpperCase() + item.exerciseName.slice(1) : "Unknown Name",
+                exerciseName : item.exerciseName ? item.exerciseName.charAt(0).toUpperCase() + item.exerciseName.slice(1) : "Unknown Name",
                 caloriesBurned : item.caloriesBurned ? item.caloriesBurned : 0,
-                duration: item.duration ? item.duration : 60,
+                exerciseDuration: item.duration ? item.duration : 60,
                 met: item.met ? item.met : 0,
-                weight: item.weightDuringExercise ? item.weightDuringExercise : 160, 
+                weightDuringExercise: item.weightDuringExercise ? item.weightDuringExercise : 160, 
+                category: item.category ? item.category: "sports",
                 info: `${Math.trunc(item.caloriesBurned)} cal, ${(item.duration ? item.duration : 60)} minutes`
             })
         })
@@ -205,7 +206,7 @@ export default function SearchPage()
     const OpenAddFoodPage = (food)=>{
         navigate(
             {
-                pathname: 'Result',
+                pathname: 'FoodResult',
                 search: `id=${food.name}`,
                 
             }, 
@@ -213,6 +214,20 @@ export default function SearchPage()
                 state:{
                     mealCategory: mealCategory,
                     food: food
+                }
+            })
+    }
+
+    const OpenAddExercisePage = (exercise)=> {
+        navigate(
+            {
+                pathname: 'ExerciseResult',
+                search: `id=${exercise.name.split(', ').join('+').split(' ').join('+').split('/').join('+')}`,
+                
+            }, 
+            {
+                state:{
+                    exercise: exercise
                 }
             })
     }
@@ -228,7 +243,7 @@ export default function SearchPage()
                         padding: "5px",
                         cursor : "pointer",
                     }}
-                    onClick = {()=> { OpenAddFoodPage(item)}}
+                    onClick = {()=> {mealCategory === 'Exercise' ? OpenAddExercisePage(item) : OpenAddFoodPage(item)}}
                 >
                     <div className="row-flex">
                         <div 
