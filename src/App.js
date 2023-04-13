@@ -60,8 +60,8 @@ function App() {
             <Route exact path='/Diary' element= {loggedIn ? <Home initialPage={1}/> : <Navigate to = "/login" replace />}></Route>
             <Route exact path='/Nutrition'  element= {loggedIn ? <Home initialPage={2}/> : <Navigate to = "/login" replace />}></Route>
             <Route exact path='/Search'  element= {loggedIn ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>
-            <Route exact path = 'Search/FoodResult' element = {loggedIn ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
-            <Route exact path = 'Search/ExerciseResult' element = {loggedIn ? <AddExercisePage /> : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = '/Search/FoodResult' element = {loggedIn ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
+            <Route exact path = '/Search/ExerciseResult' element = {loggedIn ? <AddExercisePage /> : <Navigate to = "/login" replace />}></Route>
             <Route exact path = '/login' element = {loggedIn ? <Navigate to = "/" replace /> : <Login />} />
           </Routes>
 

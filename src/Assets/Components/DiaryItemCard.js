@@ -1,6 +1,5 @@
 import React from "react"
 import { useNavigate } from "react-router-dom";
-
 import { DiaryContext } from "../../App";
 
 export default function DiaryItemCard({ItemTitle, style})
@@ -55,7 +54,22 @@ export default function DiaryItemCard({ItemTitle, style})
                 <div 
                     key = {index}
                     style = {{
-                        width : "100%"
+                        width : "100%",
+                        cursor: 'pointer'
+                    }}
+                    onClick={()=> {
+                        navigate(
+                            {
+                                pathname: '../Search/FoodResult',
+                                search: `id=${item.name.split(', ').join('+').split(' ').join('+').split('/').join('+')}`,
+                                
+                            }, 
+                            {
+                                state:{
+                                    food: item,
+                                    editMode: true
+                                }
+                            })
                     }}
                 >
                     <div 
@@ -67,7 +81,8 @@ export default function DiaryItemCard({ItemTitle, style})
                                 width: "100%",
                                 marginLeft: "-5px",
                                 marginTop: "5px",
-                                marginBottom : "10px"
+                                marginBottom : "10px",
+                                maxWidth: "240px"
                             }}  
                         >{item.name}</div>    
                         <div className="nutrient-amount">{Math.floor(item.calories)}</div>
@@ -88,7 +103,22 @@ export default function DiaryItemCard({ItemTitle, style})
                 <div 
                     key = {index}
                     style = {{
-                        width : "100%"
+                        width : "100%",
+                        cursor: 'pointer'
+                    }}
+                    onClick={()=> {
+                        navigate(
+                            {
+                                pathname: '../Search/ExerciseResult',
+                                search: `id=${item.exerciseName.split(', ').join('+').split(' ').join('+').split('/').join('+')}`,
+                                
+                            }, 
+                            {
+                                state:{
+                                    exercise: item,
+                                    editMode: true
+                                }
+                            })
                     }}
                 >
                     <div 
@@ -100,7 +130,8 @@ export default function DiaryItemCard({ItemTitle, style})
                                 width: "100%",
                                 marginLeft: "-5px",
                                 marginTop: "5px",
-                                marginBottom : "10px"
+                                marginBottom : "10px",
+                                maxWidth: "240px"
                             }}  
                         >{item.exerciseName}</div>    
                         <div className="nutrient-amount">{Math.floor(item.caloriesBurned)}</div>
@@ -133,7 +164,8 @@ export default function DiaryItemCard({ItemTitle, style})
                                 width: "100%",
                                 marginLeft: "-5px",
                                 marginTop: "5px",
-                                marginBottom : "10px"
+                                marginBottom : "10px",
+                                maxWidth: "240px"
                             }}  
                         >{"Water (Liters)"}</div>    
                         <div className="nutrient-amount">{item.volume}</div>

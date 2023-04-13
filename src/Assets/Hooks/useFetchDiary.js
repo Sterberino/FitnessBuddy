@@ -12,7 +12,7 @@ export default function useFetchDiary()
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
 
     React.useEffect(()=>{    
-        if(fetchingDiaryInfo && diaryInfo.currentDate !== currentDate)
+        if((fetchingDiaryInfo && diaryInfo.currentDate !== currentDate) || diaryInfo.requiresUpdate)
         {
             const exerciseEntries = fetch('../api/v1/exerciseDiary?' + new URLSearchParams({
                 DiaryDate: currentDate

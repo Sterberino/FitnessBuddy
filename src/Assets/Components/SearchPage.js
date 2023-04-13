@@ -20,7 +20,7 @@ export default function SearchPage()
     const [searchInput, setSearchInput] = React.useState('');
     const [activeSearch, setActiveSearch] = React.useState('');
     const [searchResponseData, setSearchResponseData] = React.useState({foods : [], exercises: []});
-    const [recentlyAddedItem, setRecentlyAddedItem] = React.useState('');
+    const [recentlyAddedItem, setRecentlyAddedItem] = React.useState(location.state && location.state.recentlyAddedItem? location.state.recentlyAddedItem : '');
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
     const [SpinnerActive, setSpinnerActive] = React.useState(false)
 

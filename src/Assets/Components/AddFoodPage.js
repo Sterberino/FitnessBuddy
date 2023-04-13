@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
 import DonutChart from "./donutChart";
 
+import { DateContext, DiaryContext } from "../../App.js";
+
 import '../Styles/footerStyles.css'
 
 export default function AddFoodPage()
@@ -15,7 +17,71 @@ export default function AddFoodPage()
     const[servings, setServings] = React.useState(1);
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
     const [nutrientsExpanded, setNutrientsExpanded] = React.useState(false)
-    
+    const [post, setPost] = React.useState(false);
+    const [editMode, setEditMode] = React.useState(location.state && location.state.editMode ? location.state.editMode : false)
+
+    const {currentDate, setCurrentDate} = React.useContext(DateContext); 
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext)
+
+    React.useEffect(()=>{
+        if(post)
+        {
+            let foodData = {
+                ...food, 
+                Servings: servings,
+                Meal: mealCategory,
+                DiaryDate: currentDate
+            };
+            let fetchMethod = editMode ? "PATCH" : "POST";
+            let fetchUrl = `../api/v1/foodDiary${editMode ? `/${foodData._id}` : ''}`
+
+            fetch(fetchUrl, {
+                method: fetchMethod,
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(foodData)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
+                    setPost(false);
+                })
+                .then(res=> {
+                    if(editMode)
+                    {
+                        navigate('/Diary')   
+                    }
+                    else
+                    {
+                        navigate(
+                            {
+                                pathname: '/Search',
+                            }, 
+                            {
+                                state:{
+                                    name: mealCategory,
+                                    recentlyAddedItem: food.name
+                                }
+                            }
+                        )
+                    }
+                })
+        }
+
+
+    }, [post])
+
+
     const navigate = useNavigate()
 
     //Opens a popup for Changing the day that you want to associate the entry with (Breakfast, Lunch, Dinner, or Snacks)
@@ -190,7 +256,16 @@ export default function AddFoodPage()
                         style = {{
                             margin: "0"
                         }}    
-                        onClick = {()=>{navigate('/Search')}}
+                        onClick = {()=>{
+                            if(editMode)
+                            {
+                                navigate('/Diary')   
+                            }
+                            else
+                            {
+                                navigate('/Search')    
+                            }
+                        }}
                     />
                     <div 
                         className="title"
@@ -199,11 +274,12 @@ export default function AddFoodPage()
                             marginLeft : "-20px"
                         }}
                         onClick = {()=> {TogglePopup()}}
-                    >{"Add Food"}</div>
+                    >{`${editMode ? 'Edit' : 'Add'} Food`}</div>
                     
                     <img 
                         className="footer-button" 
                         src = {`${process.env.PUBLIC_URL}/Images/check-icon.png`}
+                        onClick={()=>{setPost(true)}}
                     />
                 </div>
             </div>
@@ -361,6 +437,8 @@ export default function AddFoodPage()
 
                 </div>
                 
+                {/*------------------------------TODO HERE: IF editMode -> Delete Button---------------------------------------*/}
+
                 <img 
                 src= {`${process.env.PUBLIC_URL}/Images/Down-Arrow-Icon-B.png`} 
                 className = "footer-button" 

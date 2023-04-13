@@ -3,27 +3,31 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
 import DonutChart from "./donutChart";
 
-import { DateContext } from "../../App.js";
+import { DateContext , DiaryContext} from "../../App.js";
 
 import '../Styles/footerStyles.css'
 
 export default function AddExercisePage()
 {
     const location = useLocation();
-  
-    const [exercise, setExercise] = React.useState(location.state ? location.state.exercise : null)
+
+    const [editMode, setEditMode] = React.useState(location.state && location.state.editMode ? location.state.editMode : false)
+    const [exercise, setExercise] = React.useState(location.state && location.state.exercise ? location.state.exercise : null)
     const [post, setPost] = React.useState(false);
     const {currentDate, setCurrentDate} = React.useContext(DateContext); 
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext)
 
     React.useEffect(()=>{
         if(post)
         {
             let exerciseData = exercise;
             exerciseData.DiaryDate = currentDate;
-            console.log(exerciseData)
 
-            fetch('../api/v1/exerciseDiary', {
-                method: "POST",
+            let fetchMethod = editMode ? "PATCH" : "POST";
+            let fetchUrl = `../api/v1/exerciseDiary${editMode ? `/${exerciseData._id}` : ''}`
+
+            fetch(fetchUrl, {
+                method: fetchMethod,
                 mode: "cors",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,8 +37,34 @@ export default function AddExercisePage()
             })
                 .then(res => res.json())
                 .then(res => {
-                    console.log(res);
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
                     setPost(false);
+                })
+                .then(res=> {
+                    if(editMode)
+                    {
+                        navigate('/Diary')
+                    }
+                    else{
+                        navigate(
+                            {
+                                pathname: '/Search',
+                            }, 
+                            {
+                                state:{
+                                    name: 'Exercise',
+                                    recentlyAddedItem: exercise.exerciseName
+                                }
+                            })
+                    }
+                    
                 })
 
         }
@@ -75,16 +105,24 @@ export default function AddExercisePage()
                         style = {{
                             margin: "0"
                         }}    
-                        onClick = {()=>{        
-                            navigate(
+                        onClick = {()=>{    
+                            if(editMode)
                             {
-                                pathname: '/Search',
-                            }, 
+                                navigate('/Diary')   
+                            }
+                            else
                             {
-                                state:{
-                                    name: 'Exercise',
-                                }
-                            })
+                                navigate(
+                                    {
+                                        pathname: '/Search',
+                                    }, 
+                                    {
+                                        state:{
+                                            name: 'Exercise',
+                                        }
+                                    }
+                                ) 
+                            }    
                         }}
                     />
                     <div 
@@ -94,7 +132,7 @@ export default function AddExercisePage()
                             marginLeft : "-20px"
                         }}
                         onClick = {()=> {TogglePopup()}}
-                    >{"Add Exercise"}</div>
+                    >{`${editMode ? 'Edit' : 'Add'} Exercise`}</div>
                     
                     <img 
                         className="footer-button" 
@@ -169,7 +207,7 @@ export default function AddExercisePage()
                 </div>
             </div>
 
-          
+            {/*TODO HERE: IF editMode -> Delete Button*/}
         </>
     )
 
