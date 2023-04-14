@@ -485,7 +485,6 @@ export default function AddFoodPage()
                             marginRight: '5px'
                         }}
                         onClick={()=>{
-                            console.log('DELETE')
                             setDeleteEntry(true);
                         }}
                     >{"Delete Entry"}

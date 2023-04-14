@@ -11,30 +11,40 @@ const CreateEntry = async (req, res) => {
     res.status(StatusCodes.CREATED).json({foodEntry})
 }
 
-//Get all of the entries in a given day for the current user.
+//Get all of the entries in a given day for the current user if the date is provided. Otherwise, get the most recent 20 entries, sorted by recency.
 const ReadAllEntries = async (req, res)=> {
     if(!req.query.DiaryDate)
     {
-        throw new CustomAPIError('A date must be provided for food diary queries.', StatusCodes.BAD_REQUEST);
-    }
+        const foods = await Food.find({
+           createdBy: req.user.userId,
+        }).limit(20).sort({createdAt: -1});
 
-    const date = new Date(req.query.DiaryDate);
-
-    //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
-    const foods = await Food.find({
-        createdBy: req.user.userId,
-        DiaryDate: {
-            $gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-            $lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
-        }
-    }).sort('createdAt');
-
-    res
+        return res
         .status(StatusCodes.OK)
         .json({
             foods,
             count: foods.length
         })
+    }
+    else{
+        const date = new Date(req.query.DiaryDate);
+
+        //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
+        const foods = await Food.find({
+            createdBy: req.user.userId,
+            DiaryDate: {
+                $gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+                $lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+            }
+        }).sort('createdAt');
+    
+        return res
+            .status(StatusCodes.OK)
+            .json({
+                foods,
+                count: foods.length
+            })
+    }   
 }
 
 //Get a single diary entry using an ID

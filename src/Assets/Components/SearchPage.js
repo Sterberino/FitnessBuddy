@@ -7,7 +7,8 @@ import '../Styles/searchPageStyles.css'
 import { useNavigate, useLocation } from "react-router-dom";
 import ChangeMealCategoryPopup from "./ChangeMealCategoryPopup.js";
 import Spinner from "./Spinner";
-import { DiaryContext } from "../../App";
+import { DateContext, DiaryContext } from "../../App";
+import { upload } from "@testing-library/user-event/dist/upload";
 
 export default function SearchPage()
 {
@@ -15,18 +16,20 @@ export default function SearchPage()
     const initialMealCategory = (location.state ? location.state.name : null);
 
     const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+    const {currentDate} = React.useContext(DateContext);
 
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
     const [searchInput, setSearchInput] = React.useState('');
     const [activeSearch, setActiveSearch] = React.useState('');
-    const [searchResponseData, setSearchResponseData] = React.useState({foods : [], exercises: []});
+    const [searchResponseData, setSearchResponseData] = React.useState({foods : [], exercises: [], history: []});
     const [recentlyAddedItem, setRecentlyAddedItem] = React.useState(location.state && location.state.recentlyAddedItem? location.state.recentlyAddedItem : '');
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
     const [SpinnerActive, setSpinnerActive] = React.useState(false)
+    const [historyLoaded, setHistoryLoaded] = React.useState(false);
 
     const SearchItems = ()=>{
         setSpinnerActive(true);
-        setSearchResponseData({foods : [], exercises: []})
+        setSearchResponseData(prev => ({foods : [], exercises: [], history: prev.history}))
         if(mealCategory === 'Exercise')
         {
             fetch('../api/v1/search/exercise?' + new URLSearchParams({
@@ -77,9 +80,54 @@ export default function SearchPage()
         let timeout = null;
         if(recentlyAddedItem !== '')
         {
-            let timeout = setTimeout(() => {
-                setRecentlyAddedItem('') 
-            }, 3000);
+            let uploadData = null;
+            let fetchUrl = '';
+
+            if(mealCategory !== 'Exercise')
+            {
+                uploadData = {
+                    ...recentlyAddedItem, 
+                    Servings: 1,
+                    Meal: mealCategory,
+                    DiaryDate: currentDate
+                };
+                fetchUrl = '../api/v1/foodDiary'
+            }
+            else
+            {
+                fetchUrl = '../api/v1/exerciseDiary';
+                uploadData = {
+                    ...recentlyAddedItem, 
+                    DiaryDate: currentDate
+                };
+            }
+
+            fetch(fetchUrl, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(uploadData)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
+                })
+                .then(res => {
+                    let timeout = setTimeout(() => {
+                        setHistoryLoaded(false);
+                        setRecentlyAddedItem('') 
+                    }, 3000);
+                })
         }
         else{
             let timeout = setTimeout(() => {}, 1);
@@ -90,6 +138,50 @@ export default function SearchPage()
             clearTimeout(timeout)
         )
     }, [recentlyAddedItem])
+
+    React.useEffect(()=>{
+        if(!historyLoaded)
+        {
+            setSpinnerActive(true);
+            let fetchUrl = '';
+
+            if(mealCategory !== 'Exercise')
+            {
+                fetchUrl = '../api/v1/foodDiary'
+            }
+            else
+            {
+                fetchUrl = '../api/v1/exerciseDiary';
+            }
+
+            fetch(fetchUrl, {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization" : `Bearer ${localStorage.getItem('token')}`
+                },
+            })
+                .then(res => res.json())
+                .then(res => {
+                    let historyInfo = mealCategory === 'Exercise' ? res.exercises : res.foods;
+                    setSearchResponseData(prev => ({...prev, history: historyInfo}))
+                    setHistoryLoaded(true);
+                    setSpinnerActive(false);  
+                })
+                .then(() => {
+                    setDiaryInfo(prev => {
+                        let info = {
+                            ...prev, 
+                            requiresUpdate: true
+                        };
+                        
+                        return info;
+                    })
+                })
+
+        }
+    })
 
     const navigate = useNavigate();
 
@@ -139,18 +231,18 @@ export default function SearchPage()
     }
 
     const AddItemToDiary = (item)=> {
-        console.log(`Clicked Add One Button with item: ${item.name} ${item.info}`);
-        console.log(item)
         setRecentlyAddedItem(item)
     }
 
     const GetSearchResults = ()=> {
-        return mealCategory === 'Exercise' ? GetExerciseSearchResults() : GetFoodSearchResults();
+        return mealCategory === 'Exercise' ? GetExerciseSearchResults(false) : GetFoodSearchResults(false);
     }
 
-    function GetExerciseSearchResults()
-    {
-        const SearchResults = searchResponseData.exercises.map(item => {
+    function GetExerciseSearchResults(history)
+    {        
+        const container =  history === true ? searchResponseData.history:  searchResponseData.exercises;
+
+        const SearchResults = container.map(item => {
             return ({
                 name : item.exerciseName ? item.exerciseName.charAt(0).toUpperCase() + item.exerciseName.slice(1) : "Unknown Name",
                 exerciseName : item.exerciseName ? item.exerciseName.charAt(0).toUpperCase() + item.exerciseName.slice(1) : "Unknown Name",
@@ -166,8 +258,10 @@ export default function SearchPage()
         return SearchResults;
     }
 
-    const GetFoodSearchResults = ()=> {
-        const SearchResults = searchResponseData.foods.map(item => {
+    const GetFoodSearchResults = (history)=> {
+        const container = history === true ? searchResponseData.history : searchResponseData.foods;
+
+        const SearchResults = container.map(item => {
             return ({
                 name : item.name ? item.name.charAt(0).toUpperCase() + item.name.slice(1) : "Unknown Name",
                 calories : item.calories ? item.calories : 0,
@@ -189,18 +283,26 @@ export default function SearchPage()
     }
 
     const GetHistory = ()=> {
-        const SearchResults = [
-            {
-                name : "Steak",
-                info : "190 cal, Round Steak, 4.0 oz"
-            },
-            {
-                name : "100% Whey Protein - Vanilla",
-                info : "130 cal, Muscle Milk, 1.0 Scoop"
-            }
-        ]
+        let arr = mealCategory === 'Exercise' ? GetExerciseSearchResults(true) : GetFoodSearchResults(true);
+        //Filter duplicate entries
+        if(mealCategory === 'Exercise')
+        {
+            arr = arr.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                    t.exerciseName === value.exerciseName && t.caloriesBurned === value.caloriesBurned
+                ))
+            )
+        }
+        else
+        {
+            arr = arr.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                    t.name === value.name && t.calories === value.calories
+                ))
+            )            
+        }
 
-        return SearchResults;
+        return arr;
     }
 
     const OpenAddFoodPage = (food)=>{
@@ -364,7 +466,7 @@ export default function SearchPage()
             </div>
             
             {activeSearch !== '' && GetSearchCards(GetSearchResults())}
-            {activeSearch === '' && GetSearchCards(GetHistory())}
+            {activeSearch === '' && historyLoaded === true && GetSearchCards(GetHistory())}
             {changeMealPopupOpen && 
                 <ChangeMealCategoryPopup 
                     OnClickEvent={(category)=>{

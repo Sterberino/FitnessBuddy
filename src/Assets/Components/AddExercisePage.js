@@ -253,7 +253,6 @@ export default function AddExercisePage()
                             marginRight: '5px'
                         }}
                         onClick={()=>{
-                            console.log('DELETE')
                             setDeleteEntry(true);
                         }}
                     >{"Delete Entry"}

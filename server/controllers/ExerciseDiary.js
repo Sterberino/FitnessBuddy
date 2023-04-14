@@ -15,30 +15,41 @@ const CreateEntry = async (req, res) => {
     res.status(StatusCodes.CREATED).json({exerciseEntry})
 }
 
-//Get all of the entries in a given day for the current user.
+//Get all of the entries in a given day for the current user if the date is provided. Otherwise, return most recent 20 (max), sorted by recency.
 const ReadAllEntries = async (req, res)=> {
     if(!req.query.DiaryDate)
     {
-        throw new CustomAPIError('A date must be provided for exercise diary queries.', StatusCodes.BAD_REQUEST);
+        const exercises = await Exercise.find({
+            createdBy: req.user.userId,
+         }).sort({createdAt: -1}).limit(20);
+         
+         return res
+            .status(StatusCodes.OK)
+            .json({
+                exercises,
+                count: exercises.length
+            })
+    }
+    else{
+        const date = new Date(req.query.DiaryDate);
+
+        //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
+        const exercises = await Exercise.find({
+            createdBy: req.user.userId,
+            DiaryDate: {
+                $gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+                $lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+            }
+        }).sort('createdAt');
+    
+        return res
+            .status(StatusCodes.OK)
+            .json({
+                exercises,
+                count: exercises.length
+            })
     }
 
-    const date = new Date(req.query.DiaryDate);
-
-    //Get All the foods posted on the given date, starting at the beginning of the day, until 11:59:59... PM
-    const exercises = await Exercise.find({
-        createdBy: req.user.userId,
-        DiaryDate: {
-            $gte: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-            $lt: new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
-        }
-    }).sort('createdAt');
-
-    res
-        .status(StatusCodes.OK)
-        .json({
-            exercises,
-            count: exercises.length
-        })
 }
 
 //Get a single diary entry using an ID
