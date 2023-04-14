@@ -6,6 +6,7 @@ import DonutChart from "./donutChart";
 import { DateContext , DiaryContext} from "../../App.js";
 
 import '../Styles/footerStyles.css'
+import ChangeExerciseInfoPopup from "./ChangeExerciseInfoPopup.js";
 
 export default function AddExercisePage()
 {
@@ -16,7 +17,8 @@ export default function AddExercisePage()
     const [post, setPost] = React.useState(false);
     const [deleteEntry, setDeleteEntry] = React.useState(false);
     const {currentDate, setCurrentDate} = React.useContext(DateContext); 
-    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext)
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+    const [popupOpen, setPopupOpen] = React.useState(false);
 
     React.useEffect(()=>{
         if(post)
@@ -104,7 +106,6 @@ export default function AddExercisePage()
         }
     }, [deleteEntry])
 
-
     const navigate = useNavigate()
 
     //Opens a popup for Changing the day that you want to associate the entry with (Breakfast, Lunch, Dinner, or Snacks)
@@ -112,13 +113,27 @@ export default function AddExercisePage()
         //setChangeMealPopupOpen(prev => !prev)
     }
 
+    const SetExerciseValues =  (duration, weight)=> {
+        console.log(`Weight: ${weight}, Duration: ${duration}`)
+        const newExercise = {...exercise, weightDuringExercise: weight, exerciseDuration: duration, caloriesBurned: 0.453592 * weight * exercise.met / 60 * duration};
+        console.log(JSON.stringify( newExercise))
+        setExercise(newExercise);
+        setPopupOpen(false)
+    }
+
     return(
-        <>
+        <div
+            style  = {{
+                width: "100%",
+                height: "100%",
+                overflow: popupOpen ? 'visible' : ''
+            }}
+        >
             <div 
                 className="displayCard headercard"
                 style ={{
                     position: "fixed",
-                    marginTop: "-5px",
+                    marginTop: "-75px",
                     paddingBottom : "15px",
                     width: "360px",
                     height: "70px",
@@ -201,11 +216,14 @@ export default function AddExercisePage()
                     style =  {{
                         padding: "10px" ,
                         paddingBottom: "0px",
-                        paddingTop: "0px"
+                        paddingTop: "0px",
+                        pointerEvents: "none"
                     }}
                 >
                     <div className="title">{"Calories Burned"}</div>
-                    <div className="blue-title">{Math.trunc(exercise.caloriesBurned)}</div>
+                    <div 
+                        className="blue-title"
+                    >{Math.trunc(exercise.caloriesBurned)}</div>
                 </div>
                 <div className="nutrient-keys-divider"></div>
                 
@@ -220,7 +238,7 @@ export default function AddExercisePage()
                     <div className="title">{"Exercise Duration"}</div>
                     <div 
                         className="blue-title"
-                        onClick = {()=> {}}       
+                        onClick={()=>{setPopupOpen(true)}}      
                     >{exercise.exerciseDuration}
                          
                     </div>
@@ -235,7 +253,9 @@ export default function AddExercisePage()
                     }}
                 >
                     <div className="title">{"Weight during exercise"}</div>
-                    <div className="blue-title">{exercise.weightDuringExercise}</div>
+                    <div className="blue-title"
+                         onClick={()=>{setPopupOpen(true)}}      
+                    >{exercise.weightDuringExercise}</div>
                 </div>
                 {editMode &&
                     <div className="nutrient-keys-divider"></div>
@@ -259,7 +279,21 @@ export default function AddExercisePage()
                     </div>/*TODO HERE: IF editMode -> Delete Button*/
                 }
             </div>  
-        </>
+
+            {popupOpen && <ChangeExerciseInfoPopup 
+                OnClickEvent = {
+                    (duration, weightDuringExercise)=> {
+                        SetExerciseValues(duration, weightDuringExercise);
+                    }
+                } 
+                OnExitEvent = {
+                    (duration, weightDuringExercise)=> {
+                        setPopupOpen(false)
+                    }
+                } 
+                initialDuration = {exercise.exerciseDuration} 
+                initialWeight = {exercise.weightDuringExercise}/>}
+        </div>
     )
 
 }
