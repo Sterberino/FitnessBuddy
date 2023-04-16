@@ -2,7 +2,7 @@ import React from "react";
 import '../Styles/nutritionPageStyles.css'
 
 //Gets calories consumed on the current selected day, broken down by which meal is associated with the entry.
-export default function CalorieBreakdown()
+export default function CalorieBreakdown({mealCalories, totalCalories, netCalories, goalCalories})
 {
     const colors = [
         {
@@ -26,7 +26,7 @@ export default function CalorieBreakdown()
 
     function GetCalorieAmounts()
     {
-        return [250, 350, 150, 250]
+        return mealCalories;
     }
 
     return(
@@ -54,7 +54,7 @@ export default function CalorieBreakdown()
                         "boxShadow" : colors[2].glowColor
                     }}></div>                
                     <div className="title nutrient-name">{"Dinner"}</div>
-                    <div className="nutrient-amount">{`(${Math.trunc(GetCalorieAmounts()[0])}Cal)`}</div>
+                    <div className="nutrient-amount">{`(${Math.trunc(GetCalorieAmounts()[2])}Cal)`}</div>
                 </div>
                 <div className="meal-key">
                     <div className="key-symbol" style ={{ 
@@ -62,20 +62,20 @@ export default function CalorieBreakdown()
                         "boxShadow" : colors[3].glowColor
                     }}></div>                
                     <div className="title nutrient-name">{"Snacks"}</div>
-                    <div className="nutrient-amount">{`(${Math.trunc(GetCalorieAmounts()[0])}Cal)`}</div>
+                    <div className="nutrient-amount">{`(${Math.trunc(GetCalorieAmounts()[3])}Cal)`}</div>
                 </div>
         </div>
 
         <div className="nutrient-keys-divider"></div>
         <div className="row-flex">
             <div className="title">{"Total Calories"}</div>
-            <div className="nutrient-amount">{"0"}</div>
+            <div className="nutrient-amount">{Math.trunc(totalCalories)}</div>
 
         </div>
         <div className="nutrient-keys-divider"></div>
         <div className="row-flex">
             <div className="title">{"Net Calories"}</div>
-            <div className="nutrient-amount">{"0"}</div>
+            <div className="nutrient-amount">{Math.trunc(netCalories)}</div>
 
         </div>
         <div className="nutrient-keys-divider"></div>
@@ -86,7 +86,7 @@ export default function CalorieBreakdown()
                 style = {{
                     color : "rgba(0,195, 255, 1)"
                 }}
-            >{"1750"}</div>
+            >{Math.trunc(goalCalories)}</div>
         </div>
         </>    
     )

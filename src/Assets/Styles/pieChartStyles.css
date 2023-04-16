@@ -15,7 +15,7 @@
     height: 86%;
     top: 7%;
     left: 7%;
-
+    z-index: 0;
     background: conic-gradient(
         rgba(0,0,0,0) 0deg,
         var(--lightest-blue-fill) 0deg,
@@ -48,7 +48,7 @@
     text-align: center;
     pointer-events: none;
     color: rgba(9, 16, 24, 1);
-
+    z-index: 1;
 
     animation-name: pie-chart-text-animation;
     animation-duration: 0.3s;

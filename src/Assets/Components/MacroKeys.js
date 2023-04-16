@@ -1,7 +1,7 @@
 import React from "react";
 import '../Styles/nutritionPageStyles.css'
 
-export default function MacroKeys()
+export default function MacroKeys({percentages, gramValues})
 {
     const barColors = [
         {
@@ -50,19 +50,17 @@ export default function MacroKeys()
 
     function GetCurrentPercentages()
     {
-        const percentages = [0.5, 0.15, 0.35]
-        return percentages
+        return percentages ? percentages : [0, 0, 0]
     }
 
     function GetGramValues()
     {
-        const values = [100, 30, 70]
-        return values;
+        return gramValues ?  gramValues : [0, 0, 0]
     }
 
     function GetGoalPercentages()
     {
-        const percentages = [0.5, 0.25, 0.25]
+        const percentages = [0.4, 0.3, 0.3]
         return percentages
     }
 

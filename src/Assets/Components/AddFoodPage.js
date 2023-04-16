@@ -131,15 +131,7 @@ export default function AddFoodPage()
         setChangeMealPopupOpen(prev => !prev)
     }
 
-    //Get the percentages for Carbs, Fat, Protein to display on the Food page.
-    function GetMacroBreakdown(nutritionInformation)
-    {
-        const total = nutritionInformation.reduce((accumulator, current) => accumulator+ current, 
-        0)
-        const percentages = nutritionInformation.map(item => item / total)
-        
-        return percentages;
-    }
+
 
 
     //Gets all of the more detailed nutrition information available for the food.
@@ -277,6 +269,15 @@ export default function AddFoodPage()
         return nutritionInformation;
     }
 
+    //Get the percentages for Carbs, Fat, Protein to display on the Food page.
+    function GetMacroBreakdown(nutritionInformation)
+    {
+        const total = nutritionInformation.reduce((accumulator, current) => accumulator+ current, 
+        0)
+        const percentages = nutritionInformation.map(item => item / total)
+        
+        return percentages;
+    }
 
     //We're going to get the relevant information and assign it to variables to avoid multiple function calls per render. 
     const foodMacros = GetMacros();

@@ -114,9 +114,7 @@ export default function AddExercisePage()
     }
 
     const SetExerciseValues =  (duration, weight)=> {
-        console.log(`Weight: ${weight}, Duration: ${duration}`)
         const newExercise = {...exercise, weightDuringExercise: weight, exerciseDuration: duration, caloriesBurned: 0.453592 * weight * exercise.met / 60 * duration};
-        console.log(JSON.stringify( newExercise))
         setExercise(newExercise);
         setPopupOpen(false)
     }

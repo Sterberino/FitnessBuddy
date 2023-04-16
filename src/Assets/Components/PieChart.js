@@ -1,7 +1,7 @@
 import React from "react";
 import '../Styles/pieChartStyles.css'
 
-export default function PieChart()
+export default function PieChart({percentages})
 {
     const colors = [
         {
@@ -24,15 +24,15 @@ export default function PieChart()
 
     function GetInitialPercentages()
     {
-        const percentages = GetPercentages();
-        const initialPercentages = new Array(percentages.length).fill(0);
+        const percentageArray = GetPercentages();
+        const initialPercentages = new Array(percentageArray.length).fill(0);
         return initialPercentages;
     }
 
     function GetPercentages()
     {
-        const percentages = [0.25, 0.35, 0.15, 0.25]
-        return percentages;
+        const percentageArray = percentages ? percentages : [0.25, 0.35, 0.15, 0.25]
+        return percentageArray;
     }
 
     function InitSlices()
@@ -56,15 +56,21 @@ export default function PieChart()
                 /*sliceCenterAngle *= (180 / Math.PI)
                 console.log(`sliceCenterAngle : ${sliceCenterAngle}`)
                 sliceCenterAngle *= (Math.PI / 180)*/
-                let pieSlice = (<div className="pie-chart-slice" key = {i} style={{
+                let pieSlice = (
+                <div>
+                    {percentages[i] === GetPercentages()[i]  && GetPercentages()[i] !== 0 && 
+                    <div className="pie-chart-text" style={{
+                        "top" : `${Math.sin(sliceCenterAngle  - Math.PI / 2) * 30 + 40}%`,
+                        "left" : `${Math.cos(sliceCenterAngle - Math.PI / 2) * 30 + 40}%`
+                    }}>{`${percentages[i].toPrecision(1) * 100}%`}</div>}
+                 <div className="pie-chart-slice" key = {i} style={{
                     "background" : `conic-gradient(rgba(0,0,0,0) ${runningTotal * 360}deg, ${colors[i].fillColor} ${runningTotal * 360}deg, ${colors[i].fillColor} ${(runningTotal + percentages[i]) * 360}deg, rgba(0,0,0,0) ${(runningTotal + percentages[i]) * 360 + 0.05}deg`,
                     "filter" : `drop-shadow(0px 0px 5.5px ${colors[i].glowColor}`
                 }}>
-                    {percentages[i] === GetPercentages()[i]  && GetPercentages()[i] !== 0 && <div className="pie-chart-text" style={{
-                        "top" : `${Math.sin(sliceCenterAngle  - Math.PI / 2) * 31 + 40}%`,
-                        "left" : `${Math.cos(sliceCenterAngle - Math.PI / 2) * 31 + 40}%`,
-                    }}>{`${Math.trunc(percentages[i] * 100)}%`}</div>}
+                    
+                </div>
                 </div>)
+               
                  pieSlices.push(pieSlice);
                  runningTotal += percentages[i]
             

@@ -6,7 +6,7 @@ import '../Styles/donutChartStyles.css'
 export default function DonutChart({nutritionInformation, height, width, style})
 {
     const [currentFill, setCurrentFill] = React.useState(nutritionInformation ? new Array(nutritionInformation.length).fill(0) : [0, 0, 0])
-    const [desiredFill, setDesiredFill] = React.useState(nutritionInformation ? nutritionInformation : [0.2, 0.5, 0.3])
+    const [desiredFill, setDesiredFill] = React.useState(nutritionInformation ? nutritionInformation : [0, 0, 0])
 
     const [bars, setBars] = React.useState(InitBars());
     const barColors = [

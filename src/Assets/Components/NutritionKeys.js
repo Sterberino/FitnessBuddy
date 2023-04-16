@@ -1,8 +1,12 @@
 import React from "react";
 import '../Styles/nutritionPageStyles.css'
+import { DiaryContext } from "../../App";
+
 
 export default function NutritionKeys()
 {
+    const {diaryInfo, setDiaryInfo} = React.useContext(DiaryContext);
+
     const barColors = [
         {
             fillColor : {
@@ -48,92 +52,101 @@ export default function NutritionKeys()
         }
     ]
 
+    //Return an object with accumulated values from all daily food entries
+    function GetTotalValues()
+    {
+        const total = {
+                carbohydrates_total_g: GetTotalFieldValue('carbohydrates_total_g'),
+                fat_total_g: GetTotalFieldValue('fat_total_g'),
+                protein_g: GetTotalFieldValue('protein_g'),
+                fiber_g: GetTotalFieldValue('fiber_g'),
+                sugar_g: GetTotalFieldValue('sugar_g'),
+                fat_saturated_g: GetTotalFieldValue('fat_saturated_g'),
+                cholesterol_mg: GetTotalFieldValue('cholesterol_mg'),
+                sodium_mg: GetTotalFieldValue('sodium_mg'),
+                potassium_mg: GetTotalFieldValue('potassium_mg'),
+            }
+        return total;
+    }
+
+    //Get the total for one field
+    function GetTotalFieldValue(field)
+    {
+        if(!diaryInfo.foodEntries)
+        {
+            return 0;
+        }
+
+        const total = diaryInfo.foodEntries.length === 1 ? 0 : diaryInfo.foodEntries.reduce((accumulator, current) => {
+            return accumulator + current[field]
+        }, 0)
+
+        return total;
+    }
+
+    function GetCalorieGoal()
+    {
+        return 2000;
+    }
+
     function GetNutritionInfo()
     {
+        const calorieGoal = GetCalorieGoal();
+        const total = GetTotalValues();
         const NutritionInfo = [
             {
                 "Name" : "Carbohydrates",
-                "currentAmount" : 100,
+                "currentAmount" : total.carbohydrates_total_g,
                 "desiredAmount" : 240,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
                 "Name" : "Fat",
-                "currentAmount" : 30,
+                "currentAmount" : total.fat_total_g,
                 "desiredAmount" : 80,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
                 "Name" : "Protein",
-                "currentAmount" : 70,
+                "currentAmount" : total.protein_g,
                 "desiredAmount" : 140,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
                 "Name" : "Fiber",
-                "currentAmount" : 8,
+                "currentAmount" : total.fiber_g,
                 "desiredAmount" : 38,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
                 "Name" : "Sugar",
-                "currentAmount" : 2,
+                "currentAmount" : total.sugar_g,
                 "desiredAmount" : 63,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
-                "Name" : "Polyunsaturated Fat",
-                "currentAmount" : 1,
+                "Name" : "Saturated Fat",
+                "currentAmount" : total.fat_saturated_g,
                 "desiredAmount" : 0,
-                "unit" : "G"
-            },
-            {
-                "Name" : "Monounsaturated Fat",
-                "currentAmount" : 5,
-                "desiredAmount" : 0,
-                "unit" : "G"
+                "unit" : "g"
             },
             {
                 "Name" : "Cholesterol",
-                "currentAmount" : 0,
+                "currentAmount" : total.cholesterol_mg,
                 "desiredAmount" : 0,
                 "unit" : "mg"
             },
             {
                 "Name" : "Sodium",
-                "currentAmount" : 220,
+                "currentAmount" : total.sodium_mg,
                 "desiredAmount" : 2300,
                 "unit" : "mg"
             },
             {
                 "Name" : "Potassium",
-                "currentAmount" : 216,
+                "currentAmount" : total.potassium_mg,
                 "desiredAmount" : 3500,
                 "unit" : "mg"
-            },
-            {
-                "Name" : "Vitamin A",
-                "currentAmount" : 20,
-                "desiredAmount" : 100,
-                "unit" : ""
-            },
-            {
-                "Name" : "Vitamin C",
-                "currentAmount" : 85,
-                "desiredAmount" : 100,
-                "unit" : ""
-            },
-            {
-                "Name" : "Calcium",
-                "currentAmount" : 4,
-                "desiredAmount" : 100,
-                "unit" : ""
-            },
-            {
-                "Name" : "Iron",
-                "currentAmount" : 4,
-                "desiredAmount" : 100,
-                "unit" : ""
             },
         ]
 
@@ -181,8 +194,13 @@ export default function NutritionKeys()
 
             let i = 0; 
             let changed = false;
+            let nonzeroValueFound = false;
             for(i; i < currentValues.length; i++)
             {
+                if(fillPercentages[i] > 0)
+                {
+                    nonzeroValueFound = true
+                }
                 if(currentValues[i] === fillPercentages[i])
                 {
                     continue;
@@ -196,6 +214,11 @@ export default function NutritionKeys()
                     currentValues[i] = val;
                     changed = true;
                 }
+            }
+            if(!nonzeroValueFound && React.Children.toArray(body.props.children).length < 2)
+            {
+                setBody(GenerateNutritionList())
+                return;
             }
             if(changed === true)
             {
@@ -259,7 +282,7 @@ export default function NutritionKeys()
                 }
             }
             keys.push(<div className="nutrient-keys-divider" key = {`nutrient-keys-divider ${i}`}></div>)
-            keys.push(<div className="title nutrient-title" key = {`nutrient-title ${i}`}>{nutritionInfo[i].Name}</div>)
+            keys.push(<div className="title nutrient-title" key = {`nutrient-title ${i}`}>{`${nutritionInfo[i].Name} (${nutritionInfo[i].unit})`}</div>)
             keys.push(<div className="nutrient-amount" key = {`nutrientinfo-currentAmount ${i}`}>{nutritionInfo[i].currentAmount}</div>)
             keys.push(<div className="nutrient-amount" key = {`nutrientinfo-desiredAmount ${i}`}>{nutritionInfo[i].desiredAmount}</div>)
             keys.push(<div className="nutrient-amount" key = {`nutrientinfo-remainingAmount ${i}`}>{nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount < 0 ? 0 : nutritionInfo[i].desiredAmount - nutritionInfo[i].currentAmount}</div>)

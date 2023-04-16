@@ -160,9 +160,10 @@ export default function DiaryPage()
             <DiaryItemCard ItemTitle={"Snacks"}/>
 
             <DiaryItemCard ItemTitle={"Exercise"}/>
+            
             <DiaryItemCard 
                 style = {{
-                    marginBottom: "80px"
+                    marginBottom: "80px",
                 }} 
                 ItemTitle={"Water"}
             />
