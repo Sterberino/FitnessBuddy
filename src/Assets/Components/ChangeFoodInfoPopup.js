@@ -5,24 +5,34 @@ import '../Styles/searchPageStyles.css'
 import '../Styles/nutritionPageStyles.css'
 import '../Styles/datepickerStyles.css'
 
-//A small popup component that allows you to change the information associated with an exercise entry.
-export default function ChangeExerciseInfoPopup({OnClickEvent, OnExitEvent, initialDuration, initialWeight})
+//A small popup component that allows you to information associated with a food entry
+export default function ChangeFoodInfoPopup({OnClickEvent, OnExitEvent, initialServings, initialServingSize})
 {
-    const [duration, setDuration] = React.useState(initialDuration);
-    const [weightDuringExercise, setWeightDuringExercise] = React.useState(initialWeight)
+    const [servings, setServings] = React.useState(initialServings);
+    const [servingSize, setServingSize] = React.useState(initialServingSize);
+
 
 
     
     return(
         <>
-            <div className="displayCard change-meal-category-popup">
+            <div 
+                className="displayCard change-meal-category-popup"
+                style = {{
+                    width: "180px",
+                    height: "180px",
+                    top: "calc(50% - 100px)",
+                    left: "calc(50% - 90px)"
+                }}
+            >
                 <form 
                     className= "date-input-form"
                     onSubmit={(event)=> {
                         event.preventDefault()
+                    
                         if(OnClickEvent)
                         {
-                            OnClickEvent(duration, weightDuringExercise);
+                            OnClickEvent(servings, servingSize);
                         }
                     }}
                 >
@@ -41,19 +51,19 @@ export default function ChangeExerciseInfoPopup({OnClickEvent, OnExitEvent, init
                             }}
                             autoComplete = "new-password"
                             autoFocus = {false}
-                            id = "duration-text-input"
+                            id = "servings-text-input"
                             type="text" 
                         
-                            value={duration}
+                            value={servings}
                             onChange={(e)=> { 
                                 e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
                                 if(e.target.value.length < 5)
                                 {
-                                    setDuration( e.target.value)
+                                    setServings( e.target.value)
                                 }
                             }}
                         />
-                        <div className="title">{"minutes"}</div>
+                        <div className="title">{"servings of"}</div>
                     </div>
 
                     <div 
@@ -71,19 +81,19 @@ export default function ChangeExerciseInfoPopup({OnClickEvent, OnExitEvent, init
                             }}
                             autoComplete = "new-password"
                             autoFocus = {false}
-                            id = "weight-text-input"
+                            id = "servings-input"
                             type="text" 
                         
-                            value={weightDuringExercise}
+                            value={servingSize}
                             onChange={(e)=> { 
                                 e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
                                 if(e.target.value.length < 5)
                                 {
-                                    setWeightDuringExercise( e.target.value)    
+                                    setServingSize( e.target.value)    
                                 }
                             }} 
                         />
-                        <div className="title">{"pounds"}</div>
+                        <div className="title">{"grams"}</div>
                     </div>
                 </form>
                 
@@ -100,7 +110,7 @@ export default function ChangeExerciseInfoPopup({OnClickEvent, OnExitEvent, init
                             width: "50%",
                             textAlign: "left"
                         }}
-                        onClick={() => {OnExitEvent(duration, weightDuringExercise)}}
+                        onClick={() => {OnExitEvent(servings, servingSize)}}
                     >{"Cancel"}
                     </div>
                     <div 
@@ -109,7 +119,7 @@ export default function ChangeExerciseInfoPopup({OnClickEvent, OnExitEvent, init
                             width: "50%",
                             textAlign: "right"
                         }}
-                        onClick = {() => {OnClickEvent(duration, weightDuringExercise)}}
+                        onClick = {() => {OnClickEvent(servings, servingSize)}}
                     >{"Ok"}</div>
                 </div>
 

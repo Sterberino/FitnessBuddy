@@ -6,7 +6,9 @@ import '../Styles/donutChartStyles.css'
 export default function DonutChart({nutritionInformation, height, width, style})
 {
     const [currentFill, setCurrentFill] = React.useState(nutritionInformation ? new Array(nutritionInformation.length).fill(0) : [0, 0, 0])
+    const [desiredFill, setDesiredFill] = React.useState(nutritionInformation ? nutritionInformation : [0.2, 0.5, 0.3])
 
+    const [bars, setBars] = React.useState(InitBars());
     const barColors = [
         {
             fillColor : {
@@ -66,13 +68,6 @@ export default function DonutChart({nutritionInformation, height, width, style})
         }
     ]
 
-    const [bars, setBars] = React.useState(InitBars()) 
-    
-    function GetFillPercentages()
-    {
-        const percentages = [0.5, 0.15, 0.35]
-        return nutritionInformation ? nutritionInformation : percentages;
-    }
 
     function InitBars()
     {
@@ -180,15 +175,15 @@ export default function DonutChart({nutritionInformation, height, width, style})
             let changed = false;
             for(i; i < currentFill.length; i++)
             {
-                if(currentFill[i] === GetFillPercentages()[i])
+                if(currentFill[i] === desiredFill[i])
                 {
                     continue;
                 }
                 else{
                     let val = currentFill[i] + 0.035;
-                    if(val > GetFillPercentages()[i])
+                    if(val > desiredFill[i])
                     {
-                        val = GetFillPercentages()[i]
+                        val = desiredFill[i]
                     }
                     currentValues[i] = val;
                     setCurrentFill(currentValues);

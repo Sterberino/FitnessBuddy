@@ -75,7 +75,8 @@ const UpdateEntry = async (req, res) => {
             name,
             Servings,
             Meal,
-            DiaryDate
+            DiaryDate,
+            serving_size_g
         },
         user: {userId},
         params: {id: foodEntryId}
@@ -89,11 +90,17 @@ const UpdateEntry = async (req, res) => {
             StatusCodes.BAD_REQUEST);
     }
 
+    if(!serving_size_g)
+    {
+        serving_size_g = 100;
+    }
+
     //Assign the required fields to a new object to pass into findOneAndUpdate
     const fieldsToUpdate = {
         name: name,
         Servings: Servings,
         Meal: Meal,
+        serving_size_g: serving_size_g,
         DiaryDate: new Date(DiaryDate)
     }
 

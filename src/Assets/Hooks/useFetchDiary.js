@@ -72,6 +72,27 @@ export default function useFetchDiary()
                         waterEntries: waterEntries.waterEntries,
                         currentDate: currentDate,
                         requiresUpdate: false};
+
+
+                    //For each food entry, we scale the values by the entry's serving size and number of servings
+                    for(let i = 0; i < foodEntries.foods.length; i++)
+                    {
+                        let servingsFactor = (foodEntries.foods[i].serving_size_g / 100) * foodEntries.foods[i].Servings 
+                        foodEntries.foods[i] = {
+                            ...foodEntries.foods[i],
+                            calories: foodEntries.foods[i].calories * servingsFactor,
+                            fat_total_g: foodEntries.foods[i].fat_total_g * servingsFactor,
+                            fat_saturated_g: foodEntries.foods[i].fat_saturated_g * servingsFactor,
+                            protein_g: foodEntries.foods[i].protein_g * servingsFactor,
+                            sodium_mg: foodEntries.foods[i].sodium_mg * servingsFactor,
+                            potassium_mg: foodEntries.foods[i].potassium_mg * servingsFactor,
+                            cholesterol_mg: foodEntries.foods[i].cholesterol_mg * servingsFactor,
+                            carbohydrates_total_g: foodEntries.foods[i].carbohydrates_total_g * servingsFactor,
+                            fiber_g: foodEntries.foods[i].fiber_g * servingsFactor,
+                            sugar_g: foodEntries.foods[i].sugar_g * servingsFactor,
+                        }
+
+                    }
                     setDiaryInfo(newDiaryInfo);
     
                 })
