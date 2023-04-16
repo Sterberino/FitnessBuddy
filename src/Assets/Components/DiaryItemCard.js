@@ -67,6 +67,7 @@ export default function DiaryItemCard({ItemTitle, style})
                             {
                                 state:{
                                     food: item,
+                                    mealCategory: item.Meal,
                                     editMode: true
                                 }
                             })
