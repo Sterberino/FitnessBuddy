@@ -96,55 +96,55 @@ export default function NutritionKeys()
         const NutritionInfo = [
             {
                 "Name" : "Carbohydrates",
-                "currentAmount" : total.carbohydrates_total_g,
-                "desiredAmount" : 240,
+                "currentAmount" : Math.trunc(total.carbohydrates_total_g),
+                "desiredAmount" : 200,
                 "unit" : "g"
             },
             {
                 "Name" : "Fat",
-                "currentAmount" : total.fat_total_g,
-                "desiredAmount" : 80,
+                "currentAmount" : Math.trunc(total.fat_total_g),
+                "desiredAmount" : 66,
                 "unit" : "g"
             },
             {
                 "Name" : "Protein",
-                "currentAmount" : total.protein_g,
-                "desiredAmount" : 140,
+                "currentAmount" : Math.trunc(total.protein_g),
+                "desiredAmount" : 150,
                 "unit" : "g"
             },
             {
                 "Name" : "Fiber",
-                "currentAmount" : total.fiber_g,
-                "desiredAmount" : 38,
+                "currentAmount" : Math.trunc(total.fiber_g),
+                "desiredAmount" : 30,
                 "unit" : "g"
             },
             {
                 "Name" : "Sugar",
-                "currentAmount" : total.sugar_g,
-                "desiredAmount" : 63,
+                "currentAmount" : Math.trunc(total.sugar_g),
+                "desiredAmount" : 24,
                 "unit" : "g"
             },
             {
                 "Name" : "Saturated Fat",
-                "currentAmount" : total.fat_saturated_g,
-                "desiredAmount" : 0,
+                "currentAmount" : Math.trunc(total.fat_saturated_g),
+                "desiredAmount" : 120,
                 "unit" : "g"
             },
             {
                 "Name" : "Cholesterol",
-                "currentAmount" : total.cholesterol_mg,
-                "desiredAmount" : 0,
+                "currentAmount" : Math.trunc(total.cholesterol_mg),
+                "desiredAmount" : 200,
                 "unit" : "mg"
             },
             {
                 "Name" : "Sodium",
-                "currentAmount" : total.sodium_mg,
+                "currentAmount" : Math.trunc(total.sodium_mg),
                 "desiredAmount" : 2300,
                 "unit" : "mg"
             },
             {
                 "Name" : "Potassium",
-                "currentAmount" : total.potassium_mg,
+                "currentAmount" : Math.trunc(total.potassium_mg),
                 "desiredAmount" : 3500,
                 "unit" : "mg"
             },

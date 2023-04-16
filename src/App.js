@@ -9,13 +9,16 @@ import './Assets/Components/NutritionOverviewPage.js'
 import './Assets/Styles/footerStyles.css'
 import Home from './Assets/Components/Home';
 import { Route, Routes, BrowserRouter as Router, useNavigate, Navigate } from 'react-router-dom';
-import SearchPage from './Assets/Components/SearchPage';
-import AddFoodPage from './Assets/Components/AddFoodPage';
+import SearchPage from './Assets/Components/SearchPage.js';
+import AddFoodPage from './Assets/Components/AddFoodPage.js';
 import Login from './Assets/Components/Login.js';
-import Spinner from './Assets/Components/Spinner';
+import Spinner from './Assets/Components/Spinner.js';
 
-import useVerifyLogin from './Assets/Hooks/useVerifyLogin';
-import AddExercisePage from './Assets/Components/AddExercisePage';
+import useVerifyLogin from './Assets/Hooks/useVerifyLogin.js';
+import AddExercisePage from './Assets/Components/AddExercisePage.js';
+import AddWaterPage from './Assets/Components/AddWaterPage.js';
+import AddWeightPage from './Assets/Components/AddWeightPage.js';
+
 
 export const DateContext = React.createContext(null);
 export const DiaryContext = React.createContext(null);
@@ -62,6 +65,8 @@ function App() {
             <Route exact path='/Search'  element= {loggedIn ? <SearchPage />  : <Navigate to = "/login" replace />}></Route>
             <Route exact path = '/Search/FoodResult' element = {loggedIn ? <AddFoodPage />  : <Navigate to = "/login" replace />}></Route>
             <Route exact path = '/Search/ExerciseResult' element = {loggedIn ? <AddExercisePage /> : <Navigate to = "/login" replace />}></Route>
+            <Route path = '/AddWater' element = {loggedIn ? <AddWaterPage /> : <Navigate to = "/login" replace />}></Route>
+            <Route path = '/AddWeight' element = {loggedIn ? <AddWeightPage /> : <Navigate to = "/login" replace />}></Route>
             <Route exact path = '/login' element = {loggedIn ? <Navigate to = "/" replace /> : <Login />} />
           </Routes>
 

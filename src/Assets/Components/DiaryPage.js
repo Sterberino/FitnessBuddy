@@ -161,12 +161,42 @@ export default function DiaryPage()
 
             <DiaryItemCard ItemTitle={"Exercise"}/>
             
-            <DiaryItemCard 
+            <div 
+                className="row-flex"
                 style = {{
-                    marginBottom: "80px",
+                    width : "360px",
+                    maxWidth : "360px",
+                    minWidth : "360px", 
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                    marginLeft: '0px',
+                    marginRight: '0px',
+                    marginTop: '-5px',
+                    marginBottom: '75px',
+                    alignItems: 'flex-start',
                 }} 
-                ItemTitle={"Water"}
-            />
+            >
+                <DiaryItemCard 
+                    style = {{
+                        width : "177.5px",
+                        maxWidth : "177.5px",
+                        minWidth : "177.5px",
+                        marginRight: "2.5px",
+                    }} 
+                    ItemTitle={"Water"}
+                />
+                <DiaryItemCard 
+                    style = {{
+                      
+                        width : "177.5px",
+                        maxWidth : "177.5px",
+                        minWidth : "177.5px",
+                        marginLeft: "2.5px",
+                    }} 
+                    ItemTitle={"Weight"}
+                />
+            </div>
+            
         
         </>
     )
