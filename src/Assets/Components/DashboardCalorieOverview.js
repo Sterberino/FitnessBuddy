@@ -14,13 +14,13 @@ export default function DashboardCalorieOverview({diaryInfo})
     {
         let calsEaten = GetTotalDailyCalories();
         let calsBurned = GetCaloriesBurned();
-        let totalCals = calsEaten - calsBurned;
+        let totalCals = (calsEaten - calsBurned)  / GetCalorieGoal();
 
         totalCals = totalCals > 1 ? 1: totalCals;
         totalCals = totalCals < 0 ? 0: totalCals;
 
 
-        return totalCals / GetCalorieGoal();
+        return totalCals;
     }
 
     function GetTotalDailyCalories()
@@ -55,6 +55,7 @@ export default function DashboardCalorieOverview({diaryInfo})
     const calorieGoal = GetCalorieGoal();
     const totalDailyCalories = GetTotalDailyCalories();
     const calorieRatio = GetCalorieTotalRatio();
+    
     const caloriesBurned = GetCaloriesBurned();
 
     return (
@@ -71,7 +72,6 @@ export default function DashboardCalorieOverview({diaryInfo})
                         {"Remaining = Goal - Food + Exercise"}
                     </div>
                 </div>
-
                 <div className="weight-progress-header">
                     <div className="column-flex">
                         <DonutChart nutritionInformation={[0,0,0, calorieRatio]}/>
