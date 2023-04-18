@@ -65,10 +65,15 @@ export default function Login()
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(registrationRequest)
+                body: JSON.stringify({
+                    userName: registrationRequest.userName,
+                    email: registrationRequest.email,
+                    password: registrationRequest.password
+                })
             })
                 .then(res => {
-                if(res.status !== 200) { 
+                    if(res.status !== 201) { 
+                    
                     throw new Error(res.status)
                 } 
                 return res.json()})
@@ -199,7 +204,6 @@ export default function Login()
 
                         if(canSend)
                         {
-                            console.log('CAN SEND')
                             setLoginRequest({
                                 email: emailInput,
                                 password: passwordInput,
@@ -315,7 +319,11 @@ export default function Login()
                 <form 
                     onSubmit={(event)=> {
                         event.preventDefault()
-                        setInputErrorMessage('');
+                    
+                        if(!inputErrorMessage.includes('Invalid Crendentials'))
+                        {
+                            setInputErrorMessage('');
+                        }
                         
                         let canSend = true;
                         if(emailInput === '')

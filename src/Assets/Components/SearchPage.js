@@ -372,7 +372,7 @@ export default function SearchPage()
                             <img 
                                 className="cancel-search-icon" 
                                 alt=""
-                                src={`${process.env.PUBLIC_URL}/Images/Plus-Sign.png`}
+                                src={`${process.env.PUBLIC_URL}/Images/Plus-sign.png`}
                                 style = {{
                                     left: "5px"
                                 }}
