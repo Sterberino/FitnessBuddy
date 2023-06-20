@@ -14,8 +14,12 @@ export default function AddFoodPage()
     const initialMealCategory = (location.state ? location.state.mealCategory : null);
 
     const [mealCategory, setMealCategory] = React.useState(initialMealCategory ? initialMealCategory : "Breakfast")
-    const [food, setFood] = React.useState(location.state ? location.state.food : null)
-  
+    
+    let initFood = location.state ? location.state.food : null;
+    initFood.Servings = initFood.Servings ? initFood.Servings : 1;
+    initFood.serving_size_g = initFood.serving_size_g ? initFood.serving_size_g : 100;    
+    const [food, setFood] = React.useState(initFood)
+
     //Popup for changing meal category
     const [changeMealPopupOpen, setChangeMealPopupOpen] = React.useState(false);
     //Show more detailed nutrition info?
@@ -220,7 +224,7 @@ export default function AddFoodPage()
                         }}
                     >
                         <div className="title">{item.Name}</div>
-                        <div className="nutrient-amount">{`${item.currentAmount} ${item.unit}`}</div>
+                        <div className="nutrient-amount">{`${parseFloat(item.currentAmount.toFixed(2))} ${item.unit}`}</div>
                     </div>
                 </div>
             )
@@ -231,22 +235,33 @@ export default function AddFoodPage()
 
     function SetFoodValues(servings, servingSize)
     {
+        servings = Number(servings);
+        if(servings === null || servings <= 0)
+        {
+            servings = 1;
+        }
+        servingSize = Number(servingSize)
+        if(servingSize === null || servingSize <= 0)
+        {
+            servingSize = 1;
+        }
+
         setFood(prev => {
             let servingsFactor = (servingSize/ prev.serving_size_g) * (servings / prev.Servings);
             return {
                 ...prev, 
-                Servings: servings, 
-                serving_size_g: servingSize,
-                calories: prev.calories * servingsFactor,
-                fat_total_g: prev.fat_total_g * servingsFactor,
-                fat_saturated_g: prev.fat_saturated_g * servingsFactor,
-                protein_g: prev.protein_g * servingsFactor,
-                sodium_mg: prev.sodium_mg * servingsFactor,
-                potassium_mg: prev.potassium_mg * servingsFactor,
-                cholesterol_mg: prev.cholesterol_mg * servingsFactor,
-                carbohydrates_total_g: prev.carbohydrates_total_g * servingsFactor,
-                fiber_g: prev.fiber_g * servingsFactor,
-                sugar_g: prev.sugar_g * servingsFactor,
+                Servings: Number(servings), 
+                serving_size_g: Number(servingSize),
+                calories: Number(prev.calories * servingsFactor),
+                fat_total_g: Number(prev.fat_total_g * servingsFactor),
+                fat_saturated_g: Number(prev.fat_saturated_g * servingsFactor),
+                protein_g: Number(prev.protein_g * servingsFactor),
+                sodium_mg: Number(prev.sodium_mg * servingsFactor),
+                potassium_mg: Number(prev.potassium_mg * servingsFactor),
+                cholesterol_mg: Number(prev.cholesterol_mg * servingsFactor),
+                carbohydrates_total_g: Number(prev.carbohydrates_total_g * servingsFactor),
+                fiber_g: Number(prev.fiber_g * servingsFactor),
+                sugar_g: Number(prev.sugar_g * servingsFactor),
             }
         })
         setFoodInfoPopupOpen(false);
@@ -272,9 +287,9 @@ export default function AddFoodPage()
     //Get the percentages for Carbs, Fat, Protein to display on the Food page.
     function GetMacroBreakdown(nutritionInformation)
     {
-        const total = nutritionInformation.reduce((accumulator, current) => accumulator+ current, 
+        const total = nutritionInformation.reduce((accumulator, current) => {return accumulator+ Number( current)}, 
         0)
-        const percentages = nutritionInformation.map(item => item / total)
+        const percentages = nutritionInformation.map(item => Number(item) / total)
         
         return percentages;
     }
@@ -282,7 +297,7 @@ export default function AddFoodPage()
     //We're going to get the relevant information and assign it to variables to avoid multiple function calls per render. 
     const foodMacros = GetMacros();
     const percentages = GetMacroBreakdown(foodMacros);
-    
+
     return(
         <>
             <div 
@@ -462,10 +477,10 @@ export default function AddFoodPage()
                                 color: " rgba(255,55,92,1)"
                             }}
                         >
-                            {`${percentages[0].toPrecision(1) * 100}%`}
+                            {`${parseFloat(percentages[0].toFixed(1)) * 100}%`}
                         </div>
 
-                        <div className="nutrient-amount">{`${foodMacros[0]} G`}</div>
+                        <div className="nutrient-amount">{`${parseFloat(foodMacros[0])} G`}</div>
                         <div className="nutrient-amount">{"Carbs"}</div>
                     </div>
 
@@ -476,10 +491,10 @@ export default function AddFoodPage()
                                 color: " rgba(137,255,118,1)"
                             }}
                         >
-                            {`${percentages[1].toPrecision(1) * 100}%`}
+                            {`${parseFloat(percentages[1].toFixed(1)) * 100}%`}
                         </div>
 
-                        <div className="nutrient-amount">{`${foodMacros[1]} G`}</div>
+                        <div className="nutrient-amount">{`${parseFloat(foodMacros[1].toFixed(1))} G`}</div>
                         <div className="nutrient-amount">{"Fat"}</div>
                     </div>
 
@@ -490,10 +505,10 @@ export default function AddFoodPage()
                                 color: " rgba(72,222,255,1)"
                             }}
                         >
-                            {`${percentages[2].toPrecision(1) * 100}%`}
+                            {`${parseFloat(percentages[2].toFixed(1)) * 100}%`}
                         </div>
 
-                        <div className="nutrient-amount">{`${foodMacros[2]} G`}</div>
+                        <div className="nutrient-amount">{`${parseFloat(foodMacros[2].toFixed(2))} G`}</div>
                         <div className="nutrient-amount">{"Protein"}</div>
                     </div>
 

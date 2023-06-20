@@ -30,12 +30,12 @@
   },
   "scripts": {
     "dev": "(react-scripts start) | (nodemon server/index.js)",
-    "start": "node server/index.js",
+    "start": "npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://0.0.0.0:3001",
+  "proxy": "http://localhost:3000",
   "eslintConfig": {
     "extends": [
       "react-app",

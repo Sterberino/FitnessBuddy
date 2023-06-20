@@ -75,6 +75,9 @@ export default function useFetchDiary()
 
 
                     //For each food entry, we scale the values by the entry's serving size and number of servings
+                    //Leaving this for posterity, but food entries are stored with the nutrition values altered to reflect serving size. The
+                    //following code is not necessary
+                    /*
                     for(let i = 0; i < foodEntries.foods.length; i++)
                     {
                         let servingsFactor = (foodEntries.foods[i].serving_size_g / 100) * foodEntries.foods[i].Servings 
@@ -93,6 +96,7 @@ export default function useFetchDiary()
                         }
 
                     }
+                    */
                     setDiaryInfo(newDiaryInfo);
     
                 })

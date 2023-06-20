@@ -9,6 +9,13 @@ export default function useVerifyLogin(OnVerifyLogin)
     React.useEffect(()=> {
       if(checkingLoginStatus)
       {
+        if(localStorage.getItem('token') === null)
+        {
+          setLoggedIn(false)
+          setCheckingLoginStatus(false)
+          return;
+        }
+
         fetch('../api/v1/auth/verifyAuthentication', {
           method: "GET",
           mode: "cors",
@@ -21,7 +28,6 @@ export default function useVerifyLogin(OnVerifyLogin)
       .then(res => res.json())
       .then(res => {
           setLoggedIn(true);
-          
           const{userName, userId} = res;
           if(userName && userId)
           {
@@ -29,13 +35,20 @@ export default function useVerifyLogin(OnVerifyLogin)
             {
                 OnVerifyLogin(userName)
             }
-            setLoggedIn(true);
-            setCheckingLoginStatus(false);
           }
           else{
             setLoggedIn(false);
             setCheckingLoginStatus(false);
           }
+        })
+        .then(res => {
+          setLoggedIn(true);
+          setCheckingLoginStatus(false);
+        })
+        .catch(err => {
+          console.log(err)
+          setLoggedIn(false);
+          setCheckingLoginStatus(false);
         })
       }
       

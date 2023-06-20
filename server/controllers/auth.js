@@ -14,10 +14,13 @@ const Register = async(req, res) => {
 //Check for email and password in request body, then find the user. 
 //If the user exists, check that the password is correct
 const Login = async(req, res) => {
+    console.log("here");
+
     const {email, password} = req.body;
 
     if(!email || !password)
     {
+        console.log('Please provide and email and a password')
         throw new CustomAPIError('Please provide and email and a password', StatusCodes.BAD_REQUEST);
     }
 
@@ -25,16 +28,19 @@ const Login = async(req, res) => {
 
     if(!user)
     {
+        console.log(`No user found with email ${email}`)
         throw new CustomAPIError(`No user found with email ${email}`, StatusCodes.NOT_FOUND);
     }
 
     const correctPassword = await user.ComparePassword(password);
     if(!correctPassword)
     {
+        console.log('Incorrect Email or Password')
         throw new CustomAPIError('Incorrect Email or Password', StatusCodes.UNAUTHORIZED)
     }
 
     const token = user.CreateJWT();
+    console.log("here");
     res.status(StatusCodes.OK).json({user: {userName: user.userName}, token});
 }
 
